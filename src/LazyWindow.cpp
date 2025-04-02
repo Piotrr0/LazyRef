@@ -109,7 +109,7 @@ void LazyWindow::DrawBackgroundGrid(int size, const SDL_Color& color)
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 
-	const Vector<int> gridRenderOffset((graphOffset.x / 2) % size, (graphOffset.y / 2) % size);
+	const Vector<int> gridRenderOffset(graphOffset.x % size, graphOffset.y % size);
 
 	const int verticalLineCount = LazyMath::CeilToInt((width + size) / size);
 	const int horizontalLineCount = LazyMath::CeilToInt((height + size) / size);
