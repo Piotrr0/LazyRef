@@ -18,17 +18,19 @@ protected:
 	void HandleEvents(const SDL_Event& event);
 	void HandleQuitEvent(const SDL_Event& event);
 	void HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent);
+	void HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent);
 	void HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent);
 	void HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent);
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
 
-	int gridLargeSize = 50;
-	SDL_Color gridLargeColor = SDL_Color{ 255,255,255,102 };
+	int gridSize = 25;
+	SDL_Color gridColor = SDL_Color{ 255,255,255,102 };
 
-	int gridSmallSize = 25;
-	SDL_Color gridSmallColor = SDL_Color{ 255,255,255,51 };
+	float zoom = 1.f;
+	float maxZoom = 2.f;
+	float minZoom = 0.5f;
 
 	Vector<int> graphOffset;
 

@@ -30,8 +30,7 @@ void LazyWindow::StartRendering()
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
-		DrawBackgroundGrid(gridSmallSize, gridSmallColor);
-		DrawBackgroundGrid(gridLargeSize, gridLargeColor);
+		DrawBackgroundGrid(gridSize * zoom, gridColor);
 
 		SDL_RenderPresent(renderer);
 	}
@@ -49,6 +48,9 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 		break;
 	case SDL_MOUSEMOTION:
 		HandleMouseMotionEvent(event.motion);
+		break;
+	case SDL_MOUSEWHEEL:
+		HandleMouseWheelEvent(event.wheel);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 		HandleMouseButtonDownEvent(event.button);
@@ -73,6 +75,12 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 		graphOffset.x += motionEvent.xrel;
 		graphOffset.y += motionEvent.yrel;
 	}
+}
+
+void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
+{
+	const float zoomStep = 0.1f;
+	zoom = LazyMath::Clamp(zoom + wheelEvent.preciseY * zoomStep, minZoom, maxZoom);
 }
 
 void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent)
