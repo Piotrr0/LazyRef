@@ -2,6 +2,7 @@
 #define LAZYWINDOW_H
 
 #include <SDL2/SDL.h>
+#include "Vector.h"
 
 class SDL_Window;
 class SDL_Renderer;
@@ -14,7 +15,13 @@ public:
 
 protected:
 
+	void HandleEvents(const SDL_Event& event);
+	void HandleQuitEvent(const SDL_Event& event);
+	void HandleMouseMotionEvent(const SDL_Event& event);
+
 	void HandleMouseButtonEvents(const SDL_MouseButtonEvent& mouseEvent);
+	void HandleMouseButtonDownEvents(const SDL_MouseButtonEvent& mouseEvent);
+	void HandleMouseButtonUpEvents(const SDL_MouseButtonEvent& mouseEvent);
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
@@ -25,7 +32,10 @@ protected:
 	int gridSmallSize = 25;
 	SDL_Color gridSmallColor = SDL_Color{ 255,255,255,51 };
 
+	Vector<int> graphOffset;
+
 	bool running = false;
+	bool isDragging = false;
 
 private:
 
