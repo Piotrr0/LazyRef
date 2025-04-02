@@ -17,11 +17,9 @@ protected:
 
 	void HandleEvents(const SDL_Event& event);
 	void HandleQuitEvent(const SDL_Event& event);
-	void HandleMouseMotionEvent(const SDL_Event& event);
-
-	void HandleMouseButtonEvents(const SDL_MouseButtonEvent& mouseEvent);
-	void HandleMouseButtonDownEvents(const SDL_MouseButtonEvent& mouseEvent);
-	void HandleMouseButtonUpEvents(const SDL_MouseButtonEvent& mouseEvent);
+	void HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent);
+	void HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent);
+	void HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent);
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;

@@ -42,53 +42,51 @@ void LazyWindow::StartRendering()
 
 void LazyWindow::HandleEvents(const SDL_Event& event)
 {
-	HandleQuitEvent(event);
-	HandleMouseMotionEvent(event);
-	HandleMouseButtonEvents(event.button);
+	switch (event.type)
+	{
+	case SDL_QUIT:
+		HandleQuitEvent(event);
+		break;
+	case SDL_MOUSEMOTION:
+		HandleMouseMotionEvent(event.motion);
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		HandleMouseButtonDownEvent(event.button);
+		break;
+	case SDL_MOUSEBUTTONUP:
+		HandleMouseButtonUpEvent(event.button);
+		break;
+	default:
+		break;
+	}
 }
 
 void LazyWindow::HandleQuitEvent(const SDL_Event& event)
 {
-	if (event.type == SDL_QUIT)
+	running = false;
+}
+
+void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
+{
+	if (isDragging)
 	{
-		running = false;
+		graphOffset.x += motionEvent.xrel;
+		graphOffset.y += motionEvent.yrel;
 	}
 }
 
-void LazyWindow::HandleMouseMotionEvent(const SDL_Event& event)
+void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent)
 {
-	if (event.type == SDL_MOUSEMOTION)
-	{
-		if (isDragging)
-		{
-			graphOffset.x += event.motion.xrel;
-			graphOffset.y += event.motion.yrel;
-		}
-	}
-}
-
-void LazyWindow::HandleMouseButtonEvents(const SDL_MouseButtonEvent& mouseEvent)
-{
-	if (mouseEvent.type == SDL_MOUSEBUTTONDOWN)
-	{
-		HandleMouseButtonDownEvents(mouseEvent);
-	}
-	else if (mouseEvent.type == SDL_MOUSEBUTTONUP)
-	{
-		HandleMouseButtonUpEvents(mouseEvent);
-	}
-}
-
-void LazyWindow::HandleMouseButtonDownEvents(const SDL_MouseButtonEvent& mouseEvent)
-{
+	/*RIGHT MOUSE BUTTON*/
 	if (mouseEvent.button == SDL_BUTTON_RIGHT)
 	{
 		isDragging = true;
 	}
 }
 
-void LazyWindow::HandleMouseButtonUpEvents(const SDL_MouseButtonEvent& mouseEvent)
+void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent)
 {
+	/*RIGHT MOUSE BUTTON*/
 	if (mouseEvent.button == SDL_BUTTON_RIGHT)
 	{
 		isDragging = false;
