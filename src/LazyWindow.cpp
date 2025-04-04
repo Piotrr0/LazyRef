@@ -1,7 +1,7 @@
 #include "LazyWindow.h"
 #include "LazyMath.h"
 #include <SDL2/SDL.h>
-#include <iostream>
+#include "SelectionArea.h"
 
 LazyWindow::LazyWindow(const int width, const int height)
 {
@@ -13,10 +13,12 @@ LazyWindow::LazyWindow(const int width, const int height)
 	);
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-}
+	selectionArea = new SelectionArea(renderer);
+}  
 
 void LazyWindow::StartRendering()
 {
+	if (renderer == nullptr) return;
 	running = true;
 
 	SDL_Event event;
@@ -31,6 +33,7 @@ void LazyWindow::StartRendering()
 		SDL_RenderClear(renderer);
 
 		DrawBackgroundGrid(gridSize * zoom, gridColor);
+		DrawSelectionArea();
 
 		SDL_RenderPresent(renderer);
 	}
@@ -72,14 +75,17 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 {
 	if (isDragging)
 	{
-		graphOffset.x += motionEvent.xrel;
-		graphOffset.y += motionEvent.yrel;
+		graphOffset = Vector(motionEvent.xrel, motionEvent.yrel);
+	}
+
+	if (isSelecting)
+	{
+		selectionArea->endPoint = Vector(motionEvent.x, motionEvent.y);
 	}
 }
 
 void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 {
-	const float zoomStep = 0.1f;
 	zoom = LazyMath::Clamp(zoom + wheelEvent.preciseY * zoomStep, minZoom, maxZoom);
 }
 
@@ -90,6 +96,13 @@ void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEve
 	{
 		isDragging = true;
 	}
+
+	/*LEFT MOUSE BUTTON*/
+	if (mouseEvent.button == SDL_BUTTON_LEFT)
+	{
+		isSelecting = true;
+		selectionArea->anchorPoint = Vector(mouseEvent.x, mouseEvent.y);
+	}
 }
 
 void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent)
@@ -98,6 +111,12 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 	if (mouseEvent.button == SDL_BUTTON_RIGHT)
 	{
 		isDragging = false;
+	}
+
+	/*LEFT MOUSE BUTTON*/
+	if (mouseEvent.button == SDL_BUTTON_LEFT)
+	{
+		isSelecting = false;
 	}
 }
 
@@ -124,4 +143,12 @@ void LazyWindow::DrawBackgroundGrid(int size, const SDL_Color& color)
 		SDL_RenderDrawLine(renderer, (-size) + gridRenderOffset.x, (size * i) + gridRenderOffset.y, (width + size) + gridRenderOffset.x, (size * i) + gridRenderOffset.y);
 	}
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+}
+
+void LazyWindow::DrawSelectionArea()
+{
+	if (isSelecting)
+	{
+		selectionArea->Draw();
+	}
 }

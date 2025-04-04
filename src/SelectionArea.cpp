@@ -1,12 +1,9 @@
 #include "SelectionArea.h"
 
-SelectionArea::SelectionArea(SDL_Renderer* renderer, const Vector<int>& anchorPoint) :
-	renderer(renderer),
-	anchorPoint(anchorPoint),
-	areaRect(anchorPoint, 0, 0)
+SelectionArea::SelectionArea(SDL_Renderer* renderer) :
+	renderer(renderer)
 {
-	rectToDraw = areaRect.ConvertSDLRect();
-	endPoint = this->anchorPoint;
+
 }
 
 void SelectionArea::Draw()

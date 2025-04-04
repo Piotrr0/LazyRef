@@ -9,6 +9,7 @@ class Rect
 public:
 	Rect(const Vector<int>& start, const Vector<int>& end);
 	Rect(const Vector<int>& position, int width, int height);
+	Rect() {};
 
 	bool Contains(const Vector<int>& point) const;
 	bool Intersects(const Rect* rect) const;

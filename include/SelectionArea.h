@@ -8,7 +8,7 @@
 class SelectionArea 
 {
 public:
-	SelectionArea(SDL_Renderer* renderer, const Vector<int>& anchorPoint);
+	SelectionArea(SDL_Renderer* renderer);
 	~SelectionArea() {}
 	void Draw();
 

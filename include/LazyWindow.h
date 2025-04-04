@@ -6,6 +6,7 @@
 
 class SDL_Window;
 class SDL_Renderer;
+class SelectionArea;
 
 class LazyWindow
 {
@@ -24,11 +25,13 @@ protected:
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
+	SelectionArea* selectionArea = nullptr;
 
 	int gridSize = 25;
 	SDL_Color gridColor = SDL_Color{ 255,255,255,102 };
 
 	float zoom = 1.f;
+	float zoomStep = 0.1f;
 	float maxZoom = 2.f;
 	float minZoom = 0.5f;
 
@@ -36,10 +39,12 @@ protected:
 
 	bool running = false;
 	bool isDragging = false;
+	bool isSelecting = false;
 
 private:
 
 	void DrawBackgroundGrid(int size, const SDL_Color& color);
+	void DrawSelectionArea();
 
 };
 
