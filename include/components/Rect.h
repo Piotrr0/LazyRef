@@ -2,6 +2,7 @@
 #define RECT_H
 
 #include "Vector.h"
+#include <SDL2/SDL.h>
 
 class Rect
 {
@@ -17,6 +18,9 @@ public:
 
 	int GetWidth() const;
 	int GetHeight() const;
+
+	SDL_Rect ConvertSDLRect() const;
+
 protected:
 
 	Vector<int> topRight{};

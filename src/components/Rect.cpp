@@ -80,3 +80,13 @@ int Rect::GetHeight() const
 {
 	return bottomLeft.y - topLeft.y;
 }
+
+SDL_Rect Rect::ConvertSDLRect() const
+{
+	SDL_Rect sdlRect;
+	sdlRect.x = topLeft.x;
+	sdlRect.y = topLeft.y;
+	sdlRect.w = GetWidth();
+	sdlRect.h = GetHeight();
+	return sdlRect;
+}
