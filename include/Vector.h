@@ -1,5 +1,5 @@
 #ifndef VECTOR_H
-#define VECOTR_H
+#define VECTOR_H
 
 template<class T>
 class Vector
@@ -40,5 +40,4 @@ Vector<T>::Vector(T x, T y) : x(x), y(y)
 {
 
 }
-
-#endif // !VECTOR_H
+#endif // VECTOR_H

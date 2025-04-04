@@ -1,4 +1,5 @@
 #include "components/Rect.h"
+#include "Vector.h"
 #include <algorithm>
 
 /*TODO: Add a Min and Max to LazyMath*/
@@ -9,12 +10,12 @@ Rect::Rect(const Vector<int>& start, const Vector<int>& end)
 	SetRect(start, end);
 }
 
-Rect::Rect(Vector<int> position, int width, int height)
+Rect::Rect(const Vector<int>& position, int width, int height)
 {
 	SetRect(position, width, height);
 }
 
-bool Rect::Contains(Vector<int> point) const
+bool Rect::Contains(const Vector<int>& point) const
 {
 	return (point.x >= topLeft.x && point.x <= topRight.x &&
 		point.y >= topLeft.y && point.y <= bottomLeft.y);
@@ -28,7 +29,7 @@ bool Rect::Intersects(const Rect* rect) const
 		rect->bottomRight.y < topLeft.y);
 }
 
-void Rect::Resize(Vector<int> delta)
+void Rect::Resize(const Vector<int>& delta)
 {
 	const int newWidth = GetWidth() + delta.x;
 	const int newHeight = GetHeight() + delta.y;
@@ -62,7 +63,7 @@ void Rect::SetRect(const Vector<int>& start, const Vector<int>& end)
 	bottomLeft = { topLeft.x, bottomRight.y };
 }
 
-void Rect::SetRect(Vector<int> position, int width, int height)
+void Rect::SetRect(const Vector<int>& position, int width, int height)
 {
 	topLeft = position;
 	topRight = { position.x + width, position.y };
