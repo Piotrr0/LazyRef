@@ -27,8 +27,11 @@ protected:
 	SDL_Renderer* renderer = nullptr;
 	SelectionArea* selectionArea = nullptr;
 
-	int gridSize = 25;
-	SDL_Color gridColor = SDL_Color{ 255,255,255,102 };
+	int largeGridSize = 30;
+	SDL_Color largeGridColor = SDL_Color{ 255,255,255,102 };
+
+	int smallGridSize = 15;
+	SDL_Color smallGridColor = SDL_Color{ 255,255,255,51 };
 
 	float zoom = 1.f;
 	float zoomStep = 0.1f;

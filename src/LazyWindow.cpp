@@ -32,7 +32,9 @@ void LazyWindow::StartRendering()
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 
-		DrawBackgroundGrid(gridSize * zoom, gridColor);
+		DrawBackgroundGrid(smallGridSize * zoom, smallGridColor);
+		DrawBackgroundGrid(largeGridSize * zoom, largeGridColor);
+
 		DrawSelectionArea();
 
 		SDL_RenderPresent(renderer);
@@ -75,7 +77,7 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 {
 	if (isDragging)
 	{
-		graphOffset = Vector(motionEvent.xrel, motionEvent.yrel);
+		graphOffset += Vector(motionEvent.xrel, motionEvent.yrel);
 	}
 
 	if (isSelecting)
@@ -128,10 +130,10 @@ void LazyWindow::DrawBackgroundGrid(int size, const SDL_Color& color)
 	int width, height;
 	SDL_GetWindowSize(window, &width, &height);
 
-	const Vector<int> gridRenderOffset(graphOffset.x % size, graphOffset.y % size);
-
 	const int verticalLineCount = LazyMath::CeilToInt((width + size) / size);
 	const int horizontalLineCount = LazyMath::CeilToInt((height + size) / size);
+
+	const Vector<int> gridRenderOffset(graphOffset.x % size, graphOffset.y % size);
 
 	for (int i = 0; i < verticalLineCount; i++)
 	{
