@@ -18,6 +18,7 @@ public:
 protected:
 
 	void HandleEvents(const SDL_Event& event);
+	void HandleWindowEvent(const SDL_WindowEvent& windowEvent);
 	void HandleQuitEvent(const SDL_Event& event);
 	void HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent);
 	void HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent);
@@ -25,16 +26,15 @@ protected:
 	void HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent);
 	void HandleDropEvent(const SDL_DropEvent& dropEvent);
 
+	void DrawSelectionArea();
+	void DrawImages();
+
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SelectionArea* selectionArea = nullptr;
 	Image* droppedImage = nullptr;
 
-	int largeGridSize = 30;
-	SDL_Color largeGridColor = SDL_Color{ 255,255,255,102 };
-
-	int smallGridSize = 15;
-	SDL_Color smallGridColor = SDL_Color{ 255,255,255,51 };
+	int logicalHeightBase = 2000;
 
 	float zoom = 1.f;
 	float zoomStep = 0.1f;
@@ -47,11 +47,11 @@ protected:
 	bool isDragging = false;
 	bool isSelecting = false;
 
+	Vector<int> dropLocation;
+
 private:
 
-	void DrawBackgroundGrid(int size, const SDL_Color& color);
-	void DrawSelectionArea();
-	void DrawImages();
+	Vector<float> GetGlobalToLogicalPosition(SDL_Renderer* renderer) const;
 
 };
 

@@ -51,11 +51,11 @@ SDL_Texture* Image::loadTextureFromFile(const char* imageFile, SDL_Renderer* ren
     return texture;
 }
 
-void Image::Draw()
+void Image::Draw(const Vector<int>& graphOffset)
 {
     if (texture)
     {
-        SDL_Rect destRect = { position.x, position.y, 0, 0};
+        SDL_Rect destRect = { position.x + graphOffset.x, position.y + graphOffset.y, 0, 0};
         SDL_QueryTexture(texture, nullptr, nullptr, &destRect.w, &destRect.h);
 
         SDL_RenderCopy(renderer, texture, nullptr, &destRect);

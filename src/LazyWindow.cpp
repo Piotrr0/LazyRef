@@ -3,17 +3,48 @@
 #include <SDL2/SDL.h>
 #include "SelectionArea.h"
 #include "Image.h"
+#include "cmath"
 
 LazyWindow::LazyWindow(const int width, const int height)
 {
-	window = SDL_CreateWindow(
-		"LazyRef",
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		width, height,
-		SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
-	);
+	if (width <= 0 || height <= 0) 
+	{
+		window = SDL_CreateWindow
+		(
+			"LazyRef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			640, 480,
+			SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+		);
+	}
+	else 
+	{
+		window = SDL_CreateWindow
+		(
+			"LazyRef", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			width, height,
+			SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+		);
+	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+	if (!renderer)
+	{
+		SDL_DestroyWindow(window);
+		window = nullptr;
+		return;
+	}
+
+	int currentWidth, currentHeight;
+	SDL_GetWindowSize(window, &currentWidth, &currentHeight);
+
+	if (currentHeight > 0) 
+	{
+		const float aspectRatio = (float)currentWidth / currentHeight;
+		const int logicalWidth = static_cast<int>(logicalHeightBase * aspectRatio);
+		SDL_RenderSetLogicalSize(renderer, logicalWidth, logicalHeightBase);
+	}
+
 	selectionArea = new SelectionArea(renderer);
 }  
 
@@ -32,11 +63,8 @@ void LazyWindow::StartRendering()
 			HandleEvents(event);
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(renderer, 27,27,27,255);
 		SDL_RenderClear(renderer);
-
-		DrawBackgroundGrid(smallGridSize * zoom, smallGridColor);
-		DrawBackgroundGrid(largeGridSize * zoom, largeGridColor);
 
 		DrawSelectionArea();
 		DrawImages();
@@ -70,8 +98,27 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 	case SDL_MOUSEBUTTONUP:
 		HandleMouseButtonUpEvent(event.button);
 		break;
+	case SDL_WINDOWEVENT:
+		HandleWindowEvent(event.window);
+		break;
 	default:
 		break;
+	}
+}
+
+void LazyWindow::HandleWindowEvent(const SDL_WindowEvent& windowEvent)
+{
+	if (windowEvent.event == SDL_WINDOWEVENT_RESIZED || windowEvent.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+	{
+		const int newWidth = windowEvent.data1;
+		const int newHeight = windowEvent.data2;
+
+		if (newHeight > 0 && renderer)
+		{
+			const float newAspectRatio = (float)newWidth / newHeight;
+			const int newLogicalWidth = static_cast<int>(logicalHeightBase * newAspectRatio);
+			SDL_RenderSetLogicalSize(renderer, newLogicalWidth, logicalHeightBase);
+		}
 	}
 }
 
@@ -139,39 +186,13 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 			droppedImage = nullptr;
 		}
 
-		int mouseX, mouseY;
-		SDL_GetMouseState(&mouseX, &mouseY);
+		const Vector<float> dropLocation = GetGlobalToLogicalPosition(renderer);
 
-		const Vector<int> dropLocation = Vector<int>(mouseX, mouseY);
+		Vector<int> worldPositionInt = Vector<int>(static_cast<int>(dropLocation.x), static_cast<int>(dropLocation.y));
+		droppedImage = new Image(renderer, worldPositionInt, dropEvent.file);
 
-		droppedImage = new Image(renderer, dropLocation, dropEvent.file);
 		SDL_free(dropEvent.file);
 	}
-}
-
-void LazyWindow::DrawBackgroundGrid(int size, const SDL_Color& color)
-{
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-	int width, height;
-	SDL_GetWindowSize(window, &width, &height);
-
-	const int verticalLineCount = LazyMath::CeilToInt((width + size) / size);
-	const int horizontalLineCount = LazyMath::CeilToInt((height + size) / size);
-
-	const Vector<int> gridRenderOffset(graphOffset.x % size, graphOffset.y % size);
-
-	for (int i = 0; i < verticalLineCount; i++)
-	{
-		SDL_RenderDrawLine(renderer, (size * i) + gridRenderOffset.x, (-size) + gridRenderOffset.y, (size * i) + gridRenderOffset.x, (height + size) + gridRenderOffset.y);
-	}
-
-	for (int i = 0; i < horizontalLineCount; i++)
-	{
-		SDL_RenderDrawLine(renderer, (-size) + gridRenderOffset.x, (size * i) + gridRenderOffset.y, (width + size) + gridRenderOffset.x, (size * i) + gridRenderOffset.y);
-	}
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 
 void LazyWindow::DrawSelectionArea()
@@ -186,6 +207,23 @@ void LazyWindow::DrawImages()
 {
 	if (droppedImage)
 	{
-		droppedImage->Draw();
+		droppedImage->Draw(graphOffset);
 	}
+}
+
+Vector<float> LazyWindow::GetGlobalToLogicalPosition(SDL_Renderer* renderer) const
+{
+	int mouseX, mouseY;
+	SDL_GetGlobalMouseState(&mouseX, &mouseY);
+
+	int windowX, windowY;
+	SDL_GetWindowPosition(window, &windowX, &windowY);
+
+	const int relativeX = mouseX - windowX;
+	const int relativeY = mouseY - windowY;
+
+	float logicalX, logicalY;
+	SDL_RenderWindowToLogical(renderer, relativeX, relativeY, &logicalX, &logicalY);
+
+	return Vector<float>(logicalX, logicalY);
 }

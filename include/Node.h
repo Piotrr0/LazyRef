@@ -10,7 +10,7 @@ public:
 	Node(SDL_Renderer* renderer);
 	Node(SDL_Renderer* renderer, const Vector<int>& position);
 
-	virtual void Draw() = 0;
+	virtual void Draw(const Vector<int>& graphOffset) = 0;
 
 	bool isSelected = false;
 	Vector<int> position;
