@@ -5,27 +5,35 @@
 #include "components/Rect.h"
 #include "Drawable.h"
 
-class LazyWindow;
-
 class Node : public Drawable
 {
 public: 
-	Node(LazyWindow* window);
-	Node(LazyWindow* window, const Vector<int>& position);
+	Node(const Vector<int>& position);
+	Node(const Vector<int>& position, const Vector<int>& offset);
 
 	bool isSelected = false;
 
 	Vector<int> GetScreenPosition() const;
+	Vector<int> GetWorldPosition() const;
+
 	Vector<int> GetSize() const;
+	Vector<float> GetScale() const { return scale; }
+
+	void SetOffset(const Vector<int>& offset) { nodeOffset = offset; }
+	void SetScale(const Vector<float>& scale) { this->scale = scale; }
+
+	float zoom = 1.f; // TODO: DO IT DIFFRENTLY USING ONLY SCALE VECTOR
 
 protected:
 
 	Rect nodeRect;
 
+	Vector<int> nodeOffset;
+	Vector<float> scale = Vector(1.f, 1.f);
+
+
 	Vector<int> worldPosition;
 	Vector<int> dropPosition;
-
-	LazyWindow* window;
 };
 
 #endif // NODE_H

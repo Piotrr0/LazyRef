@@ -51,6 +51,11 @@ void Rect::Resize(const Vector<int>& delta)
 	bottomRight = newBottomRight;
 }
 
+void Rect::Resize(int width, int height)
+{
+	SetRect(topLeft, width, height);
+}
+
 void Rect::SetRect(const Vector<int>& start, const Vector<int>& end)
 {
 	topLeft.x = std::min(start.x, end.x);

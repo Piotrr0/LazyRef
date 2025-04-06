@@ -6,6 +6,8 @@
 
 class SelectionArea;
 class Image;
+struct SDL_Renderer;
+struct SDL_Window;
 
 class LazyWindow
 {
@@ -39,7 +41,7 @@ protected:
 	int logicalHeightBase = 2000;
 
 	float zoom = 1.f;
-	float zoomStep = 0.1f;
+	float zoomStep = 0.05f;
 	float maxZoom = 10.f;
 	float minZoom = 0.5f;
 

@@ -1,10 +1,11 @@
 #ifndef SELECTIONAREA_H
 #define SELECTIONAREA_H
 
-#include <SDL2/SDL.h>
 #include "Vector.h"
 #include "components/Rect.h"
 #include "Drawable.h"
+
+struct SDL_Renderer;
 
 class SelectionArea : public Drawable
 {
@@ -15,7 +16,7 @@ public:
 	void StartSelecting(const Vector<int>& anchor);
 	void StopSelecting();
 
-	virtual void Draw() const override;
+	virtual void Draw(SDL_Renderer* renderer) const override;
 
 	Vector<int> anchorPoint;
 	Vector<int> endPoint;

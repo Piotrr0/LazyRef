@@ -131,6 +131,8 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 	{
 		graphDrag = Vector(motionEvent.xrel, motionEvent.yrel);
 		graphOffset += graphDrag;
+
+		droppedImage->SetOffset(graphOffset);
 	}
 
 	if (selectionArea && selectionArea->selectionAreaActive)
@@ -142,6 +144,10 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 {
 	zoom = LazyMath::Clamp(zoom + wheelEvent.preciseY * zoomStep, minZoom, maxZoom);
+	if (droppedImage->zoom)
+	{
+		droppedImage->zoom = zoom;
+	}
 }
 
 void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent)
@@ -185,9 +191,11 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 		}
 
 		const Vector<float> dropLocation = GetGlobalToLogicalPosition();
-		const Vector<int> worldPositionInt = Vector<int>(static_cast<int>(dropLocation.x), static_cast<int>(dropLocation.y));
+		const Vector<int> logicalPosition = Vector<int>(static_cast<int>(dropLocation.x), static_cast<int>(dropLocation.y));
 
-		droppedImage = new Image(this, worldPositionInt, dropEvent.file);
+		SDL_Texture* image = Image::LoadTextureFromFile(dropEvent.file, renderer);
+
+		droppedImage = new Image(logicalPosition, graphOffset ,image);
 
 		SDL_free(dropEvent.file);
 	}
@@ -196,9 +204,9 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 void LazyWindow::DrawDrawable()
 {
 	std::vector<Drawable*> objectsToDraw = Drawable::GetAllDrawableObjects();
-	for (Drawable* objectToDraw : objectsToDraw)
+	for (const Drawable* objectToDraw : objectsToDraw)
 	{
-		objectToDraw->Draw();
+		objectToDraw->Draw(renderer);
 	}
 }
 

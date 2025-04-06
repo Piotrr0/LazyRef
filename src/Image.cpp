@@ -2,17 +2,32 @@
 #include "Node.h"
 #include <stb_image/stb_image.h>
 #include "SDL2/SDL.h"
-#include "LazyWindow.h"
 #include "Vector.h"
 
-Image::Image(LazyWindow* window, const Vector<int>& screenPosition, const char* imageFile) :
-    Node(window, screenPosition)
+// TODO: COLLAPSE CONSTRUCTOR LOGIC INTO FUNCTION
+
+Image::Image(const Vector<int>& position, SDL_Texture* image) :
+    Node(position)
 {
-    texture = LoadTextureFromFile(imageFile, window->GetRenderer());
-    if (texture)
+    texture = image;
+
+    if (image)
     {
         int w, h;
-        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+        SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
+        nodeRect.SetRect(worldPosition, worldPosition + Vector<int>(w, h));
+    }
+}
+
+Image::Image(const Vector<int>& position, const Vector<int>& offset, SDL_Texture* image) :
+    Node(position, offset)
+{
+    texture = image;
+
+    if (image)
+    {
+        int w, h;
+        SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
         nodeRect.SetRect(worldPosition, worldPosition + Vector<int>(w, h));
     }
 }
@@ -68,7 +83,7 @@ SDL_Texture* Image::LoadTextureFromFile(const char* imageFile, SDL_Renderer* ren
     return texture;
 }
 
-void Image::Draw() const
+void Image::Draw(SDL_Renderer* renderer) const
 {
     if (texture)
     {
@@ -79,10 +94,10 @@ void Image::Draw() const
         {
             screenPosition.x,
             screenPosition.y,
-            size.x,
+            size.x, 
             size.y
         };
 
-        SDL_RenderCopy(window->GetRenderer(), texture, nullptr, &destRect);
+        SDL_RenderCopy(renderer, texture, nullptr, &destRect);
     }
 }

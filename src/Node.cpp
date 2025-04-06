@@ -1,28 +1,32 @@
 #include "Node.h"
 #include "Vector.h"
-#include "LazyWindow.h"
+#include "components/Rect.h"
 
-Node::Node(LazyWindow* window) : 
-	window(window)
+Node::Node(const Vector<int>& position) :
+	dropPosition(position)
 {
 
 }
 
-Node::Node(LazyWindow* window, const Vector<int>& position) :
-	window(window),
-	dropPosition(position)
+Node::Node(const Vector<int>& position, const Vector<int>& offset) :
+	dropPosition(position),
+	nodeOffset(offset)
 {
-	worldPosition = dropPosition + window->GetGraphOffset();
+	worldPosition = position + offset;
 }
 
 Vector<int> Node::GetScreenPosition() const
 {
 	const Vector<int> offsetVector = dropPosition - worldPosition;
-	return dropPosition + offsetVector + window->GetGraphOffset();
+	return dropPosition + offsetVector + nodeOffset;
+}
+
+Vector<int> Node::GetWorldPosition() const
+{
+	return dropPosition + nodeOffset;
 }
 
 Vector<int> Node::GetSize() const
 {
-	const float zoom = window->GetZoom();
 	return Vector<int>(nodeRect.GetWidth() * zoom, nodeRect.GetHeight() * zoom);
 }

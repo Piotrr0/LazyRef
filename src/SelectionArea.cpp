@@ -1,4 +1,5 @@
 #include "SelectionArea.h"
+#include <SDL2/SDL.h>
 
 SelectionArea::SelectionArea(SDL_Renderer* renderer) :
 	renderer(renderer)
@@ -21,7 +22,7 @@ void SelectionArea::StopSelecting()
 	endPoint = Vector(0, 0);
 }
 
-void SelectionArea::Draw() const
+void SelectionArea::Draw(SDL_Renderer* renderer) const
 {
 	if (!selectionAreaActive) return;
 

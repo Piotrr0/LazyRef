@@ -3,13 +3,15 @@
 
 #include <vector>
 
+struct SDL_Renderer;
+
 class Drawable
 {
 public:
 	Drawable();
 	~Drawable();
 
-	virtual void Draw() const = 0;
+	virtual void Draw(SDL_Renderer* renderer) const = 0;
 	static std::vector<Drawable*> GetAllDrawableObjects();
 };
 
