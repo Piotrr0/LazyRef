@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include "Vector.h"
+#include "components/Rect.h"
 #include <SDL2/SDL.h>
 
 class LazyWindow;
@@ -13,11 +14,11 @@ public:
 	Node(LazyWindow* window, const Vector<int>& position);
 
 	virtual void Draw(const Vector<int>& graphOffset) = 0;
-
 	bool isSelected = false;
 	Vector<int> position;
 
 protected:
+	Rect nodeRect;
 	LazyWindow* window;
 };
 

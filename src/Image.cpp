@@ -1,12 +1,20 @@
 #include "Image.h"
 #include "Node.h"
 #include <stb_image/stb_image.h>
+#include "SDL2/SDL.h"
 #include "LazyWindow.h"
+#include "Vector.h"
 
 Image::Image(LazyWindow* window, const Vector<int>& position, const char* imageFile) :
     Node(window, position)
 {
     texture = loadTextureFromFile(imageFile, window->GetRenderer());
+    if (texture)
+    {
+        int w, h;
+        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+        nodeRect.SetRect(position, position + Vector<int>(w, h));
+    }
 }
 
 SDL_Texture* Image::loadTextureFromFile(const char* imageFile, SDL_Renderer* renderer)

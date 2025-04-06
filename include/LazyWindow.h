@@ -4,8 +4,6 @@
 #include <SDL2/SDL.h>
 #include "Vector.h"
 
-class SDL_Window;
-class SDL_Renderer;
 class SelectionArea;
 class Image;
 
@@ -49,8 +47,6 @@ protected:
 	bool running = false;
 	bool isDragging = false;
 	bool isSelecting = false;
-
-	Vector<int> dropLocation;
 
 private:
 

@@ -18,9 +18,8 @@ public:
 protected:
 
 	SDL_Renderer* renderer = nullptr;
-
 	Rect areaRect;
-	SDL_Rect rectToDraw;
+
 	SDL_Color selectionColor = { 0, 128, 255, 100 }; 
 };
 
