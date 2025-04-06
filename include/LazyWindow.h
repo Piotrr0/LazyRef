@@ -7,6 +7,7 @@
 class SDL_Window;
 class SDL_Renderer;
 class SelectionArea;
+class Image;
 
 class LazyWindow
 {
@@ -22,10 +23,12 @@ protected:
 	void HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent);
 	void HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent);
 	void HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent);
+	void HandleDropEvent(const SDL_DropEvent& dropEvent);
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SelectionArea* selectionArea = nullptr;
+	Image* droppedImage = nullptr;
 
 	int largeGridSize = 30;
 	SDL_Color largeGridColor = SDL_Color{ 255,255,255,102 };
@@ -48,6 +51,7 @@ private:
 
 	void DrawBackgroundGrid(int size, const SDL_Color& color);
 	void DrawSelectionArea();
+	void DrawImages();
 
 };
 

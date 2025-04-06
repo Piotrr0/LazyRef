@@ -2,6 +2,7 @@
 #include "LazyMath.h"
 #include <SDL2/SDL.h>
 #include "SelectionArea.h"
+#include "Image.h"
 
 LazyWindow::LazyWindow(const int width, const int height)
 {
@@ -21,6 +22,8 @@ void LazyWindow::StartRendering()
 	if (renderer == nullptr) return;
 	running = true;
 
+	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
 	SDL_Event event;
 	while (running)
 	{
@@ -36,6 +39,7 @@ void LazyWindow::StartRendering()
 		DrawBackgroundGrid(largeGridSize * zoom, largeGridColor);
 
 		DrawSelectionArea();
+		DrawImages();
 
 		SDL_RenderPresent(renderer);
 	}
@@ -50,6 +54,9 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 	{
 	case SDL_QUIT:
 		HandleQuitEvent(event);
+		break;
+	case SDL_DROPFILE:
+		HandleDropEvent(event.drop);
 		break;
 	case SDL_MOUSEMOTION:
 		HandleMouseMotionEvent(event.motion);
@@ -122,6 +129,26 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 	}
 }
 
+void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
+{
+	if (dropEvent.file)
+	{
+		if (droppedImage != nullptr)
+		{
+			delete droppedImage;
+			droppedImage = nullptr;
+		}
+
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+
+		const Vector<int> dropLocation = Vector<int>(mouseX, mouseY);
+
+		droppedImage = new Image(renderer, dropLocation, dropEvent.file);
+		SDL_free(dropEvent.file);
+	}
+}
+
 void LazyWindow::DrawBackgroundGrid(int size, const SDL_Color& color)
 {
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -152,5 +179,13 @@ void LazyWindow::DrawSelectionArea()
 	if (isSelecting)
 	{
 		selectionArea->Draw();
+	}
+}
+
+void LazyWindow::DrawImages()
+{
+	if (droppedImage)
+	{
+		droppedImage->Draw();
 	}
 }
