@@ -16,6 +16,11 @@ public:
 		return Vector(x + other.x, y + other.y);
 	}
 
+	Vector operator-(const Vector& other) const
+	{
+		return Vector(x - other.x, y - other.y);
+	}
+
 	Vector operator*(float value) const
 	{
 		return Vector(x * value, y * value);

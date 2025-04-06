@@ -15,10 +15,15 @@ public:
 
 	bool isSelected = false;
 
+	Vector<int> GetScreenPosition() const;
+	Vector<int> GetSize() const;
+
 protected:
 
 	Rect nodeRect;
-	Vector<int> position;
+
+	Vector<int> worldPosition;
+	Vector<int> dropPosition;
 
 	LazyWindow* window;
 };

@@ -5,15 +5,15 @@
 #include "LazyWindow.h"
 #include "Vector.h"
 
-Image::Image(LazyWindow* window, const Vector<int>& position, const char* imageFile) :
-    Node(window, position)
+Image::Image(LazyWindow* window, const Vector<int>& screenPosition, const char* imageFile) :
+    Node(window, screenPosition)
 {
-    texture = loadTextureFromFile(imageFile, window->GetRenderer());
+    texture = LoadTextureFromFile(imageFile, window->GetRenderer());
     if (texture)
     {
         int w, h;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        nodeRect.SetRect(position, position + Vector<int>(w, h));
+        nodeRect.SetRect(worldPosition, worldPosition + Vector<int>(w, h));
     }
 }
 
@@ -26,7 +26,7 @@ Image::~Image()
     }
 }
 
-SDL_Texture* Image::loadTextureFromFile(const char* imageFile, SDL_Renderer* renderer)
+SDL_Texture* Image::LoadTextureFromFile(const char* imageFile, SDL_Renderer* renderer)
 {
     int width, height, channels;
     unsigned char* pixels = stbi_load(imageFile, &width, &height, &channels, STBI_rgb_alpha);
@@ -72,12 +72,15 @@ void Image::Draw() const
 {
     if (texture)
     {
-        SDL_Rect destRect = 
+        const Vector<int> screenPosition = GetScreenPosition();
+        const Vector<int> size = GetSize();
+
+        SDL_Rect destRect =
         {
-            position.x + window->GetGraphOffset().x,
-            position.y + window->GetGraphOffset().y,
-            static_cast<int>(nodeRect.GetWidth() * window->GetZoom()),
-            static_cast<int>(nodeRect.GetHeight() * window->GetZoom())
+            screenPosition.x,
+            screenPosition.y,
+            size.x,
+            size.y
         };
 
         SDL_RenderCopy(window->GetRenderer(), texture, nullptr, &destRect);

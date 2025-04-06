@@ -9,12 +9,16 @@ SelectionArea::SelectionArea(SDL_Renderer* renderer) :
 void SelectionArea::StartSelecting(const Vector<int>& anchor)
 {
 	anchorPoint = anchor;
+
 	selectionAreaActive = true;
 }
 
 void SelectionArea::StopSelecting()
 {
 	selectionAreaActive = false;
+
+	anchorPoint = Vector(0,0);
+	endPoint = Vector(0, 0);
 }
 
 void SelectionArea::Draw() const
