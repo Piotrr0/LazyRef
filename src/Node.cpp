@@ -1,15 +1,15 @@
 #include "Node.h"
 #include "Vector.h"
-#include <SDL2/SDL.h>
+#include "LazyWindow.h"
 
-Node::Node(SDL_Renderer* renderer) : 
-	renderer(renderer)
+Node::Node(LazyWindow* window) : 
+	window(window)
 {
 
 }
 
-Node::Node(SDL_Renderer* renderer, const Vector<int>& position) :
-	renderer(renderer),
+Node::Node(LazyWindow* window, const Vector<int>& position) :
+	window(window),
 	position(position)
 {
 

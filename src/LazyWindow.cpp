@@ -186,10 +186,10 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 			droppedImage = nullptr;
 		}
 
-		const Vector<float> dropLocation = GetGlobalToLogicalPosition(renderer);
+		const Vector<float> dropLocation = GetGlobalToLogicalPosition();
 
 		Vector<int> worldPositionInt = Vector<int>(static_cast<int>(dropLocation.x), static_cast<int>(dropLocation.y));
-		droppedImage = new Image(renderer, worldPositionInt, dropEvent.file);
+		droppedImage = new Image(this, worldPositionInt, dropEvent.file);
 
 		SDL_free(dropEvent.file);
 	}
@@ -211,7 +211,7 @@ void LazyWindow::DrawImages()
 	}
 }
 
-Vector<float> LazyWindow::GetGlobalToLogicalPosition(SDL_Renderer* renderer) const
+Vector<float> LazyWindow::GetGlobalToLogicalPosition() const
 {
 	int mouseX, mouseY;
 	SDL_GetGlobalMouseState(&mouseX, &mouseY);

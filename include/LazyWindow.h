@@ -15,6 +15,9 @@ public:
 	LazyWindow(const int width, const int height);
 	void StartRendering();
 
+	SDL_Renderer* GetRenderer() const { return renderer; }
+	float GetZoom() const { return zoom; }
+
 protected:
 
 	void HandleEvents(const SDL_Event& event);
@@ -38,7 +41,7 @@ protected:
 
 	float zoom = 1.f;
 	float zoomStep = 0.1f;
-	float maxZoom = 2.f;
+	float maxZoom = 10.f;
 	float minZoom = 0.5f;
 
 	Vector<int> graphOffset;
@@ -51,7 +54,7 @@ protected:
 
 private:
 
-	Vector<float> GetGlobalToLogicalPosition(SDL_Renderer* renderer) const;
+	Vector<float> GetGlobalToLogicalPosition() const;
 
 };
 

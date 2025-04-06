@@ -4,11 +4,13 @@
 #include "Vector.h"
 #include <SDL2/SDL.h>
 
+class LazyWindow;
+
 class Node
 {
 public: 
-	Node(SDL_Renderer* renderer);
-	Node(SDL_Renderer* renderer, const Vector<int>& position);
+	Node(LazyWindow* window);
+	Node(LazyWindow* window, const Vector<int>& position);
 
 	virtual void Draw(const Vector<int>& graphOffset) = 0;
 
@@ -16,7 +18,7 @@ public:
 	Vector<int> position;
 
 protected:
-	SDL_Renderer* renderer;
+	LazyWindow* window;
 };
 
 #endif // NODE_H

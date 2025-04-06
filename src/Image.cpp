@@ -1,12 +1,12 @@
 #include "Image.h"
 #include "Node.h"
-#include <SDL2/SDL.h>
 #include <stb_image/stb_image.h>
+#include "LazyWindow.h"
 
-Image::Image(SDL_Renderer* renderer, const Vector<int>& position, const char* imageFile) :
-    Node(renderer, position)
+Image::Image(LazyWindow* window, const Vector<int>& position, const char* imageFile) :
+    Node(window, position)
 {
-    texture = loadTextureFromFile(imageFile, renderer);
+    texture = loadTextureFromFile(imageFile, window->GetRenderer());
 }
 
 SDL_Texture* Image::loadTextureFromFile(const char* imageFile, SDL_Renderer* renderer)
@@ -58,6 +58,9 @@ void Image::Draw(const Vector<int>& graphOffset)
         SDL_Rect destRect = { position.x + graphOffset.x, position.y + graphOffset.y, 0, 0};
         SDL_QueryTexture(texture, nullptr, nullptr, &destRect.w, &destRect.h);
 
-        SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+        destRect.w *= window->GetZoom();
+        destRect.h *= window->GetZoom();
+
+        SDL_RenderCopy(window->GetRenderer(), texture, nullptr, &destRect);
     }
 }
