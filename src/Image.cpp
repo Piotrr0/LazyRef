@@ -17,6 +17,15 @@ Image::Image(LazyWindow* window, const Vector<int>& position, const char* imageF
     }
 }
 
+Image::~Image()
+{
+    if (texture)
+    {
+        SDL_DestroyTexture(texture);
+        texture = nullptr;
+    }
+}
+
 SDL_Texture* Image::loadTextureFromFile(const char* imageFile, SDL_Renderer* renderer)
 {
     int width, height, channels;
@@ -59,15 +68,17 @@ SDL_Texture* Image::loadTextureFromFile(const char* imageFile, SDL_Renderer* ren
     return texture;
 }
 
-void Image::Draw(const Vector<int>& graphOffset)
+void Image::Draw() const
 {
     if (texture)
     {
-        SDL_Rect destRect = { position.x + graphOffset.x, position.y + graphOffset.y, 0, 0};
-        SDL_QueryTexture(texture, nullptr, nullptr, &destRect.w, &destRect.h);
-
-        destRect.w *= window->GetZoom();
-        destRect.h *= window->GetZoom();
+        SDL_Rect destRect = 
+        {
+            position.x + window->GetGraphOffset().x,
+            position.y + window->GetGraphOffset().y,
+            static_cast<int>(nodeRect.GetWidth() * window->GetZoom()),
+            static_cast<int>(nodeRect.GetHeight() * window->GetZoom())
+        };
 
         SDL_RenderCopy(window->GetRenderer(), texture, nullptr, &destRect);
     }

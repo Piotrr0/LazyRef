@@ -3,22 +3,23 @@
 
 #include "Vector.h"
 #include "components/Rect.h"
-#include <SDL2/SDL.h>
+#include "Drawable.h"
 
 class LazyWindow;
 
-class Node
+class Node : public Drawable
 {
 public: 
 	Node(LazyWindow* window);
 	Node(LazyWindow* window, const Vector<int>& position);
 
-	virtual void Draw(const Vector<int>& graphOffset) = 0;
 	bool isSelected = false;
-	Vector<int> position;
 
 protected:
+
 	Rect nodeRect;
+	Vector<int> position;
+
 	LazyWindow* window;
 };
 

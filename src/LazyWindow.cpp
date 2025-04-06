@@ -3,7 +3,8 @@
 #include <SDL2/SDL.h>
 #include "SelectionArea.h"
 #include "Image.h"
-#include "cmath"
+#include "Drawable.h"
+#include <vector>
 
 LazyWindow::LazyWindow(const int width, const int height)
 {
@@ -53,8 +54,6 @@ void LazyWindow::StartRendering()
 	if (renderer == nullptr) return;
 	running = true;
 
-	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
-
 	SDL_Event event;
 	while (running)
 	{
@@ -66,8 +65,7 @@ void LazyWindow::StartRendering()
 		SDL_SetRenderDrawColor(renderer, 27,27,27,255);
 		SDL_RenderClear(renderer);
 
-		DrawSelectionArea();
-		DrawImages();
+		DrawDrawable();
 
 		SDL_RenderPresent(renderer);
 	}
@@ -131,10 +129,11 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 {
 	if (isDragging)
 	{
-		graphOffset += Vector(motionEvent.xrel, motionEvent.yrel);
+		graphDrag = Vector(motionEvent.xrel, motionEvent.yrel);
+		graphOffset += graphDrag;
 	}
 
-	if (isSelecting)
+	if (selectionArea && selectionArea->selectionAreaActive)
 	{
 		selectionArea->endPoint = Vector(motionEvent.x, motionEvent.y);
 	}
@@ -156,8 +155,7 @@ void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEve
 	/*LEFT MOUSE BUTTON*/
 	if (mouseEvent.button == SDL_BUTTON_LEFT)
 	{
-		isSelecting = true;
-		selectionArea->anchorPoint = Vector(mouseEvent.x, mouseEvent.y);
+		selectionArea->StartSelecting(Vector(mouseEvent.x, mouseEvent.y));
 	}
 }
 
@@ -172,7 +170,7 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 	/*LEFT MOUSE BUTTON*/
 	if (mouseEvent.button == SDL_BUTTON_LEFT)
 	{
-		isSelecting = false;
+		selectionArea->StopSelecting();
 	}
 }
 
@@ -187,27 +185,20 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 		}
 
 		const Vector<float> dropLocation = GetGlobalToLogicalPosition();
+		const Vector<int> worldPositionInt = Vector<int>(static_cast<int>(dropLocation.x), static_cast<int>(dropLocation.y));
 
-		Vector<int> worldPositionInt = Vector<int>(static_cast<int>(dropLocation.x), static_cast<int>(dropLocation.y));
 		droppedImage = new Image(this, worldPositionInt, dropEvent.file);
 
 		SDL_free(dropEvent.file);
 	}
 }
 
-void LazyWindow::DrawSelectionArea()
+void LazyWindow::DrawDrawable()
 {
-	if (isSelecting)
+	std::vector<Drawable*> objectsToDraw = Drawable::GetAllDrawableObjects();
+	for (Drawable* objectToDraw : objectsToDraw)
 	{
-		selectionArea->Draw();
-	}
-}
-
-void LazyWindow::DrawImages()
-{
-	if (droppedImage)
-	{
-		droppedImage->Draw(graphOffset);
+		objectToDraw->Draw();
 	}
 }
 

@@ -11,9 +11,10 @@ class Image : public Node
 {
 public:
 	Image(LazyWindow* window, const Vector<int>& position, const char* imageFile);
+	virtual ~Image();
 
 	static SDL_Texture* loadTextureFromFile(const char* imageFile, SDL_Renderer* renderer);
-	virtual void Draw(const Vector<int>& graphOffset) override;
+	virtual void Draw() const override;
 	SDL_Texture* GetTexture() const { return texture;}
 
 protected:

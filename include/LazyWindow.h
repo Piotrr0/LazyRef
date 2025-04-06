@@ -15,6 +15,8 @@ public:
 
 	SDL_Renderer* GetRenderer() const { return renderer; }
 	float GetZoom() const { return zoom; }
+	Vector<int> GetGraphOffset() const { return graphOffset; }
+	Vector<int> GetGraphDrag() const { return graphDrag; }
 
 protected:
 
@@ -27,8 +29,7 @@ protected:
 	void HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent);
 	void HandleDropEvent(const SDL_DropEvent& dropEvent);
 
-	void DrawSelectionArea();
-	void DrawImages();
+	void DrawDrawable();
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
@@ -43,10 +44,10 @@ protected:
 	float minZoom = 0.5f;
 
 	Vector<int> graphOffset;
+	Vector<int> graphDrag;
 
 	bool running = false;
 	bool isDragging = false;
-	bool isSelecting = false;
 
 private:
 

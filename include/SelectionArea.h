@@ -4,23 +4,31 @@
 #include <SDL2/SDL.h>
 #include "Vector.h"
 #include "components/Rect.h"
+#include "Drawable.h"
 
-class SelectionArea 
+class SelectionArea : public Drawable
 {
 public:
 	SelectionArea(SDL_Renderer* renderer);
 	~SelectionArea() {}
-	void Draw();
+
+	void StartSelecting(const Vector<int>& anchor);
+	void StopSelecting();
+
+	virtual void Draw() const override;
 
 	Vector<int> anchorPoint;
 	Vector<int> endPoint;
 
+	bool selectionAreaActive = false;
+
 protected:
 
 	SDL_Renderer* renderer = nullptr;
-	Rect areaRect;
 
-	SDL_Color selectionColor = { 0, 128, 255, 100 }; 
+	SDL_Color selectionColor = { 0, 128, 255, 100 };
+	mutable Rect areaRect;
+
 };
 
 #endif // !SELECTIONAREA_H
