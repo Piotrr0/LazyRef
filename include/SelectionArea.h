@@ -4,8 +4,11 @@
 #include "Vector.h"
 #include "components/Rect.h"
 #include "Drawable.h"
+#include <functional>
+#include <unordered_set>
 
 struct SDL_Renderer;
+class Node;
 
 class SelectionArea : public Drawable
 {
@@ -14,22 +17,29 @@ public:
 	~SelectionArea() {}
 
 	void StartSelecting(const Vector<int>& anchor);
+	void SetEndPoint(const Vector<int>& endPoint);
 	void StopSelecting();
 
 	virtual void Draw(SDL_Renderer* renderer) const override;
 
-	Vector<int> anchorPoint;
-	Vector<int> endPoint;
-
 	bool selectionAreaActive = false;
 
+	void CheckForSelection(const std::vector<Node*>& nodesToCheck);
+
+	std::function<void(Node*)> onNodeBeginOverlap;
+	std::function<void(Node*)> onNodeEndOverlap;
+
 protected:
+
+	Vector<int> anchorPoint;
+	Vector<int> endPoint;
 
 	SDL_Renderer* renderer = nullptr;
 
 	SDL_Color selectionColor = { 0, 128, 255, 100 };
-	mutable Rect areaRect;
+	Rect areaRect;
 
+	std::unordered_set<Node*> currentlyOverlappingNodes;
 };
 
 #endif // !SELECTIONAREA_H

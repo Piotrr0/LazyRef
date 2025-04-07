@@ -47,6 +47,16 @@ LazyWindow::LazyWindow(const int width, const int height)
 	}
 
 	selectionArea = new SelectionArea(renderer);
+
+	selectionArea->onNodeBeginOverlap = [](Node* node) 
+		{
+			node->SetSelected(true);
+		};
+
+	selectionArea->onNodeEndOverlap = [](Node* node) 
+		{
+			node->SetSelected(false);
+		};
 }  
 
 void LazyWindow::StartRendering()
@@ -61,6 +71,8 @@ void LazyWindow::StartRendering()
 		{
 			HandleEvents(event);
 		}
+
+		Tick();
 
 		SDL_SetRenderDrawColor(renderer, 27,27,27,255);
 		SDL_RenderClear(renderer);
@@ -140,7 +152,7 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 
 	if (selectionArea && selectionArea->selectionAreaActive)
 	{
-		selectionArea->endPoint = Vector(motionEvent.x, motionEvent.y);
+		selectionArea->SetEndPoint(Vector(motionEvent.x, motionEvent.y));
 	}
 }
 
@@ -210,6 +222,15 @@ void LazyWindow::DrawDrawable()
 	for (const Drawable* objectToDraw : objectsToDraw)
 	{
 		objectToDraw->Draw(renderer);
+	}
+}
+
+void LazyWindow::Tick()
+{
+	if (droppedImage != nullptr) //TODO: TO REFACTOR
+	{
+		const std::vector<Node*> nodesToCheck = { droppedImage };
+		selectionArea->CheckForSelection(nodesToCheck);
 	}
 }
 

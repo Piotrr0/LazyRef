@@ -32,6 +32,7 @@ protected:
 	void HandleDropEvent(const SDL_DropEvent& dropEvent);
 
 	void DrawDrawable();
+	void Tick();
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
