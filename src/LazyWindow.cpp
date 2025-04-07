@@ -132,7 +132,10 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 		graphDrag = Vector(motionEvent.xrel, motionEvent.yrel);
 		graphOffset += graphDrag;
 
-		droppedImage->SetOffset(graphOffset);
+		if (droppedImage)
+		{
+			droppedImage->SetOffset(graphOffset);
+		}
 	}
 
 	if (selectionArea && selectionArea->selectionAreaActive)
