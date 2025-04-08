@@ -22,6 +22,9 @@ public:
 
 protected:
 
+	void Tick();
+	bool IsMouseOverNode() const;
+
 	void HandleEvents(const SDL_Event& event);
 	void HandleWindowEvent(const SDL_WindowEvent& windowEvent);
 	void HandleQuitEvent(const SDL_Event& event);
@@ -32,7 +35,6 @@ protected:
 	void HandleDropEvent(const SDL_DropEvent& dropEvent);
 
 	void DrawDrawable();
-	void Tick();
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;

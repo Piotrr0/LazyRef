@@ -18,6 +18,7 @@ public:
 
 	Vector<int> GetSize() const;
 	Vector<float> GetScale() const { return scale; }
+	Rect GetRect() const { return nodeRect; }
 
 	void SetOffset(const Vector<int>& offset) { nodeOffset = offset; }
 	void SetScale(const Vector<float>& scale) { this->scale = scale; }
@@ -27,7 +28,7 @@ public:
 
 protected:
 
-	Rect nodeRect;
+	mutable Rect nodeRect;
 
 	Vector<int> nodeOffset;
 	Vector<float> scale = Vector(1.f, 1.f);

@@ -15,7 +15,7 @@ Image::Image(const Vector<int>& position, SDL_Texture* image) :
     {
         int w, h;
         SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
-        nodeRect.SetRect(worldPosition, worldPosition + Vector<int>(w, h));
+        nodeRect.SetRect(position, position + Vector<int>(w, h));
     }
 }
 
@@ -28,7 +28,7 @@ Image::Image(const Vector<int>& position, const Vector<int>& offset, SDL_Texture
     {
         int w, h;
         SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
-        nodeRect.SetRect(worldPosition, worldPosition + Vector<int>(w, h));
+        nodeRect.SetRect(position, position + Vector<int>(w, h));
     }
 }
 
@@ -89,6 +89,8 @@ void Image::Draw(SDL_Renderer* renderer) const
     {
         const Vector<int> screenPosition = GetScreenPosition();
         const Vector<int> size = GetSize();
+
+        nodeRect.SetRect(screenPosition, size.x, size.y);
 
         SDL_Rect destRect =
         {

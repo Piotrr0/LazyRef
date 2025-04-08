@@ -116,6 +116,32 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 	}
 }
 
+void LazyWindow::Tick()
+{
+	if (bool mouseOverNode = IsMouseOverNode())
+	{
+		//TODO:
+	}
+
+	if (droppedImage != nullptr)
+	{
+		selectionArea->CheckForSelection({droppedImage});
+	}
+}
+
+//TODO: FIX
+bool LazyWindow::IsMouseOverNode() const
+{
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+
+	if (droppedImage != nullptr)
+	{
+		return droppedImage->GetRect().Contains(Vector<int>(x, y));
+	}
+	return false;
+}
+
 void LazyWindow::HandleWindowEvent(const SDL_WindowEvent& windowEvent)
 {
 	if (windowEvent.event == SDL_WINDOWEVENT_RESIZED || windowEvent.event == SDL_WINDOWEVENT_SIZE_CHANGED)
@@ -159,7 +185,7 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 {
 	zoom = LazyMath::Clamp(zoom + wheelEvent.preciseY * zoomStep, minZoom, maxZoom);
-	if (droppedImage->zoom)
+	if (droppedImage != nullptr)
 	{
 		droppedImage->zoom = zoom;
 	}
@@ -222,15 +248,6 @@ void LazyWindow::DrawDrawable()
 	for (const Drawable* objectToDraw : objectsToDraw)
 	{
 		objectToDraw->Draw(renderer);
-	}
-}
-
-void LazyWindow::Tick()
-{
-	if (droppedImage != nullptr) //TODO: TO REFACTOR
-	{
-		const std::vector<Node*> nodesToCheck = { droppedImage };
-		selectionArea->CheckForSelection(nodesToCheck);
 	}
 }
 
