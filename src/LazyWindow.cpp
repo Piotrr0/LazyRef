@@ -118,7 +118,7 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 
 void LazyWindow::Tick()
 {
-	if (bool mouseOverNode = IsMouseOverNode())
+	if (Node* mouseOverNode = IsMouseOverNode())
 	{
 		//TODO:
 	}
@@ -130,16 +130,17 @@ void LazyWindow::Tick()
 }
 
 //TODO: FIX
-bool LazyWindow::IsMouseOverNode() const
+Node* LazyWindow::IsMouseOverNode() const
 {
-	int x, y;
-	SDL_GetMouseState(&x, &y);
-
 	if (droppedImage != nullptr)
 	{
-		return droppedImage->GetRect().Contains(Vector<int>(x, y));
+		Vector<float> logicalMousePos = GetGlobalToLogicalPosition();
+		if (droppedImage->GetRect().Contains(Vector<int>(static_cast<int>(logicalMousePos.x), static_cast<int>(logicalMousePos.y))))
+		{
+			return droppedImage;
+		}
 	}
-	return false;
+	return nullptr;
 }
 
 void LazyWindow::HandleWindowEvent(const SDL_WindowEvent& windowEvent)

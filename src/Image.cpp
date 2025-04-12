@@ -96,7 +96,7 @@ void Image::Draw(SDL_Renderer* renderer) const
         {
             screenPosition.x,
             screenPosition.y,
-            size.x, 
+            size.x,
             size.y
         }; 
 

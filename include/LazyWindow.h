@@ -6,6 +6,7 @@
 
 class SelectionArea;
 class Image;
+class Node;
 struct SDL_Renderer;
 struct SDL_Window;
 
@@ -23,7 +24,7 @@ public:
 protected:
 
 	void Tick();
-	bool IsMouseOverNode() const;
+	Node* IsMouseOverNode() const;
 
 	void HandleEvents(const SDL_Event& event);
 	void HandleWindowEvent(const SDL_WindowEvent& windowEvent);

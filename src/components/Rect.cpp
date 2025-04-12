@@ -92,7 +92,7 @@ Vector<int> Rect::GetAnchor() const
 
 Vector<int> Rect::GetSize() const
 {
-	return Vector<int>(GetWidth(), GetWidth());
+	return Vector<int>(GetWidth(), GetHeight());
 }
 
 SDL_Rect Rect::ConvertSDLRect() const
