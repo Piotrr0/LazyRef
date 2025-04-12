@@ -90,15 +90,13 @@ void Image::Draw(SDL_Renderer* renderer) const
         const Vector<int> screenPosition = GetScreenPosition();
         const Vector<int> size = GetSize();
 
-        nodeRect.SetRect(screenPosition, size.x, size.y);
-
-        SDL_Rect destRect =
+        const SDL_Rect destRect =
         {
             screenPosition.x,
             screenPosition.y,
             size.x, 
             size.y
-        };
+        }; 
 
         SDL_RenderCopy(renderer, texture, nullptr, &destRect);
     }
