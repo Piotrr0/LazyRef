@@ -56,7 +56,7 @@ void SelectionArea::CheckForSelection(const std::vector<Node*>& nodesToCheck)
     {
         if (!node) continue;
 
-        Vector<int> nodePos = node->GetScreenPosition();
+        Vector<int> nodePos = node->GetRect().GetAnchor();
 
         if (areaRect.Contains(nodePos))
         {

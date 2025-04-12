@@ -20,6 +20,8 @@ public:
 
 	int GetWidth() const;
 	int GetHeight() const;
+	Vector<int> GetAnchor() const;
+	Vector<int> GetSize() const;
 
 	SDL_Rect ConvertSDLRect() const;
 

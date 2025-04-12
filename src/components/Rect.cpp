@@ -53,7 +53,7 @@ void Rect::Resize(const Vector<int>& delta)
 
 void Rect::Resize(int width, int height)
 {
-	Vector<int> end = { topLeft.x + width, topLeft.y + height };
+	const Vector<int> end = { topLeft.x + width, topLeft.y + height };
 	SetRect(topLeft, end);
 }
 
@@ -71,7 +71,7 @@ void Rect::SetRect(const Vector<int>& start, const Vector<int>& end)
 
 void Rect::SetRect(const Vector<int>& position, int width, int height)
 {
-	Vector<int> end = { position.x + width, position.y + height };
+	const Vector<int> end = { position.x + width, position.y + height };
 	SetRect(position, end);
 }
 
@@ -85,12 +85,24 @@ int Rect::GetHeight() const
 	return bottomLeft.y - topLeft.y;
 }
 
+Vector<int> Rect::GetAnchor() const
+{
+	return topRight;
+}
+
+Vector<int> Rect::GetSize() const
+{
+	return Vector<int>(GetWidth(), GetWidth());
+}
+
 SDL_Rect Rect::ConvertSDLRect() const
 {
-	SDL_Rect sdlRect;
-	sdlRect.x = topLeft.x;
-	sdlRect.y = topLeft.y;
-	sdlRect.w = GetWidth();
-	sdlRect.h = GetHeight();
+	const SDL_Rect sdlRect
+	{
+		topLeft.x,
+		topLeft.y,
+		GetWidth(),
+		GetHeight()
+	};
 	return sdlRect;
 }

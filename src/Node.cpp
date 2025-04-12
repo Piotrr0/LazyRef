@@ -12,31 +12,30 @@ Node::Node(const Vector<int>& position, const Vector<int>& offset) :
 	dropPosition(position),
 	nodeOffset(offset)
 {
-	worldPosition = position + offset;
-}
 
-Vector<int> Node::GetScreenPosition() const
-{
-	const Vector<int> offsetVector = dropPosition - worldPosition;
-	return dropPosition + offsetVector + nodeOffset;
-}
-
-Vector<int> Node::GetWorldPosition() const
-{
-	return dropPosition + nodeOffset;
-}
-
-Vector<int> Node::GetSize() const
-{
-	return Vector<int>(nodeRect.GetWidth() * zoom, nodeRect.GetHeight() * zoom);
 }
 
 void Node::ApplyZoom(float zoom)
 {
 	this->zoom = zoom;
+	RefreshTransform();
+}
 
-	const float width = baseWidth * zoom;
-	const float height = baseHeight * zoom;
+void Node::ApplyOffset(const Vector<int>& offset)
+{
+	this->nodeOffset = offset;
+	RefreshTransform();
+}
 
-	nodeRect.SetRect(worldPosition, width, height);
+void Node::RefreshTransform()
+{
+	const Vector<int> effectiveSize(baseWidth * zoom, baseHeight * zoom);
+	const Vector<int> effectivePosition = dropPosition + nodeOffset;
+
+	UpdateTransform(effectiveSize, effectivePosition);
+}
+
+void Node::UpdateTransform(const Vector<int>& size, const Vector<int>& position)
+{
+	nodeRect.SetRect(position, size.x, size.y);
 }

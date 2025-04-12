@@ -6,35 +6,31 @@
 
 // TODO: COLLAPSE CONSTRUCTOR LOGIC INTO FUNCTION
 
-Image::Image(const Vector<int>& position, SDL_Texture* image) :
-    Node(position)
+Image::Image(const Vector<int>& position, SDL_Texture* image)
+    : Node(position), texture(image)
 {
-    texture = image;
-
-    if (image)
+    if (texture)
     {
         int w, h;
-        SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
+        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
         baseWidth = w;
         baseHeight = h;
-        nodeRect.SetRect(position, position + Vector<int>(baseWidth, baseHeight));
+        UpdateTransform(Vector<int>(baseWidth, baseHeight), position);
     }
 }
 
-Image::Image(const Vector<int>& position, const Vector<int>& offset, SDL_Texture* image) :
-    Node(position, offset)
+Image::Image(const Vector<int>& position, const Vector<int>& offset, SDL_Texture* image)
+    : Node(position, offset), texture(image)
 {
-    texture = image;
-
-    if (image)
+    if (texture)
     {
         int w, h;
-        SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
+        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
         baseWidth = w;
         baseHeight = h;
-        nodeRect.SetRect(position, position + Vector<int>(baseWidth, baseHeight));
+        UpdateTransform(Vector<int>(baseWidth, baseHeight), position);
     }
 }
 
@@ -93,8 +89,8 @@ void Image::Draw(SDL_Renderer* renderer) const
 {
     if (texture)
     {
-        const Vector<int> screenPosition = GetScreenPosition();
-        const Vector<int> size = GetSize();
+        const Vector<int> screenPosition = nodeRect.GetAnchor();
+        const Vector<int> size = nodeRect.GetSize();
 
         const SDL_Rect destRect =
         {

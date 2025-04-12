@@ -172,7 +172,7 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 
 		if (droppedImage)
 		{
-			droppedImage->SetOffset(graphOffset);
+			droppedImage->ApplyOffset(graphOffset);
 		}
 	}
 
