@@ -30,3 +30,13 @@ Vector<int> Node::GetSize() const
 {
 	return Vector<int>(nodeRect.GetWidth() * zoom, nodeRect.GetHeight() * zoom);
 }
+
+void Node::ApplyZoom(float zoom)
+{
+	this->zoom = zoom;
+
+	const float width = baseWidth * zoom;
+	const float height = baseHeight * zoom;
+
+	nodeRect.SetRect(worldPosition, width, height);
+}

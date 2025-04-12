@@ -53,7 +53,8 @@ void Rect::Resize(const Vector<int>& delta)
 
 void Rect::Resize(int width, int height)
 {
-	SetRect(topLeft, width, height);
+	Vector<int> end = { topLeft.x + width, topLeft.y + height };
+	SetRect(topLeft, end);
 }
 
 void Rect::SetRect(const Vector<int>& start, const Vector<int>& end)
@@ -70,10 +71,8 @@ void Rect::SetRect(const Vector<int>& start, const Vector<int>& end)
 
 void Rect::SetRect(const Vector<int>& position, int width, int height)
 {
-	topLeft = position;
-	topRight = { position.x + width, position.y };
-	bottomLeft = { position.x, position.y + height };
-	bottomRight = { position.x + width, position.y + height };
+	Vector<int> end = { position.x + width, position.y + height };
+	SetRect(position, end);
 }
 
 int Rect::GetWidth() const

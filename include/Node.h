@@ -20,19 +20,22 @@ public:
 	Vector<float> GetScale() const { return scale; }
 	Rect GetRect() const { return nodeRect; }
 
+	void ApplyZoom(float zoom);
+
 	void SetOffset(const Vector<int>& offset) { nodeOffset = offset; }
 	void SetScale(const Vector<float>& scale) { this->scale = scale; }
 	virtual void SetSelected(bool isSelected) { this->isSelected = isSelected; }
 
-	float zoom = 1.f; // TODO: DO IT DIFFRENTLY USING ONLY SCALE VECTOR
+	float zoom = 1.f;
+	float baseWidth = 0.f;
+	float baseHeight = 0.f;
 
 protected:
 
-	mutable Rect nodeRect;
+	Rect nodeRect;
 
 	Vector<int> nodeOffset;
 	Vector<float> scale = Vector(1.f, 1.f);
-
 
 	Vector<int> worldPosition;
 	Vector<int> dropPosition;

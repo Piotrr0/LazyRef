@@ -15,7 +15,10 @@ Image::Image(const Vector<int>& position, SDL_Texture* image) :
     {
         int w, h;
         SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
-        nodeRect.SetRect(position, position + Vector<int>(w, h));
+
+        baseWidth = w;
+        baseHeight = h;
+        nodeRect.SetRect(position, position + Vector<int>(baseWidth, baseHeight));
     }
 }
 
@@ -28,7 +31,10 @@ Image::Image(const Vector<int>& position, const Vector<int>& offset, SDL_Texture
     {
         int w, h;
         SDL_QueryTexture(image, nullptr, nullptr, &w, &h);
-        nodeRect.SetRect(position, position + Vector<int>(w, h));
+
+        baseWidth = w;
+        baseHeight = h;
+        nodeRect.SetRect(position, position + Vector<int>(baseWidth, baseHeight));
     }
 }
 

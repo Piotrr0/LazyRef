@@ -187,7 +187,7 @@ void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 	zoom = LazyMath::Clamp(zoom + wheelEvent.preciseY * zoomStep, minZoom, maxZoom);
 	if (droppedImage != nullptr)
 	{
-		droppedImage->zoom = zoom;
+		droppedImage->ApplyZoom(zoom);
 	}
 }
 
