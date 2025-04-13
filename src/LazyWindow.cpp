@@ -245,7 +245,7 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 
 void LazyWindow::DrawDrawable()
 {
-	std::vector<Drawable*> objectsToDraw = Drawable::GetAllDrawableObjects();
+	const std::vector<Drawable*> objectsToDraw = Drawable::GetAllDrawableObjects();
 	for (const Drawable* objectToDraw : objectsToDraw)
 	{
 		objectToDraw->Draw(renderer);

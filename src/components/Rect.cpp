@@ -87,7 +87,7 @@ int Rect::GetHeight() const
 
 Vector<int> Rect::GetAnchor() const
 {
-	return topRight;
+	return topLeft;
 }
 
 Vector<int> Rect::GetSize() const
