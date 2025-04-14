@@ -21,12 +21,12 @@ bool Rect::Contains(const Vector<int>& point) const
 		point.y >= topLeft.y && point.y <= bottomLeft.y);
 }
 
-bool Rect::Intersects(const Rect* rect) const
+bool Rect::Intersects(const Rect& rect) const
 {
-	return !(rect->topLeft.x > bottomRight.x ||
-		rect->bottomRight.x < topLeft.x ||
-		rect->topLeft.y > bottomRight.y ||
-		rect->bottomRight.y < topLeft.y);
+	return !(rect.topLeft.x > bottomRight.x ||
+		rect.bottomRight.x < topLeft.x ||
+		rect.topLeft.y > bottomRight.y ||
+		rect.bottomRight.y < topLeft.y);
 }
 
 void Rect::Resize(const Vector<int>& delta)

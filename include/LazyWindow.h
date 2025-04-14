@@ -35,7 +35,7 @@ protected:
 	void HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent);
 	void HandleDropEvent(const SDL_DropEvent& dropEvent);
 
-	void DrawDrawable();
+	void DrawDrawable() const;
 
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
@@ -58,7 +58,6 @@ protected:
 private:
 
 	Vector<float> GetGlobalToLogicalPosition() const;
-
 };
 
 #endif // !LAZYWINDOW_H

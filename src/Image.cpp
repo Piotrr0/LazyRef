@@ -87,19 +87,10 @@ SDL_Texture* Image::LoadTextureFromFile(const char* imageFile, SDL_Renderer* ren
 
 void Image::Draw(SDL_Renderer* renderer) const
 {
+	const SDL_Rect rect = nodeRect.ConvertSDLRect();
+
 	if (texture)
 	{
-		const Vector<int> screenPosition = nodeRect.GetAnchor();
-		const Vector<int> size = nodeRect.GetSize();
-
-		const SDL_Rect destRect =
-		{
-			screenPosition.x,
-			screenPosition.y,
-			size.x,
-			size.y
-		};
-
-		SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+		SDL_RenderCopy(renderer, texture, nullptr, &rect);
 	}
 }

@@ -11,8 +11,6 @@ public:
 	Node(const Vector<int>& position);
 	Node(const Vector<int>& position, const Vector<int>& offset);
 
-	bool isSelected = false;
-
 	Rect GetRect() const { return nodeRect; }
 
 	void ApplyZoom(float zoom);
@@ -27,12 +25,13 @@ public:
 
 protected:
 
+	Vector<int> dropPosition;
 	Rect nodeRect;
 
 	Vector<int> nodeOffset;
 	float zoom = 1.f;
 
-	Vector<int> dropPosition;
+	bool isSelected = false;
 };
 
 #endif // NODE_H

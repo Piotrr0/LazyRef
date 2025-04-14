@@ -12,7 +12,7 @@ public:
 	Rect() {};
 
 	bool Contains(const Vector<int>& point) const;
-	bool Intersects(const Rect* rect) const;
+	bool Intersects(const Rect& rect) const;
 	void Resize(const Vector<int>& delta);
 	void Resize(int newWidth, int newHeight);
 	void SetRect(const Vector<int>& start, const Vector<int>& end);

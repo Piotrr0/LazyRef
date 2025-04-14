@@ -129,7 +129,6 @@ void LazyWindow::Tick()
 	}
 }
 
-//TODO: FIX
 Node* LazyWindow::IsMouseOverNode() const
 {
 	if (droppedImage != nullptr)
@@ -243,7 +242,7 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 	}
 }
 
-void LazyWindow::DrawDrawable()
+void LazyWindow::DrawDrawable() const
 {
 	const std::vector<Drawable*> objectsToDraw = Drawable::GetAllDrawableObjects();
 	for (const Drawable* objectToDraw : objectsToDraw)
