@@ -7,9 +7,10 @@
 
 class Node : public Drawable
 {
-public: 
+public:
 	Node(const Vector<int>& position);
 	Node(const Vector<int>& position, const Vector<int>& offset);
+	virtual ~Node() = default;
 
 	Rect GetRect() const { return nodeRect; }
 
@@ -19,11 +20,14 @@ public:
 	void UpdateTransform(const Vector<int>& size, const Vector<int>& position);
 
 	virtual void SetSelected(bool isSelected) { this->isSelected = isSelected; }
+	bool IsSelected() const { return isSelected; }
 
-	float baseWidth = 0.f;
-	float baseHeight = 0.f;
+	int GetBaseWidth() const { return baseWidth; }
+	int GetBaseHeight() const { return baseHeight; }
 
 protected:
+	int baseWidth = 0;
+	int baseHeight = 0;
 
 	Vector<int> dropPosition;
 	Rect nodeRect;

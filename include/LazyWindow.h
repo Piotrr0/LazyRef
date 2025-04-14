@@ -14,6 +14,7 @@ class LazyWindow
 {
 public:
 	LazyWindow(const int width, const int height);
+	~LazyWindow();
 	void StartRendering();
 
 	SDL_Renderer* GetRenderer() const { return renderer; }

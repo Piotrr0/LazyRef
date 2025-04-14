@@ -7,19 +7,32 @@ namespace
 
 Drawable::Drawable()
 {
-	drawableObjects.push_back(this);
+    RegisterDrawable(this);
 }
 
 Drawable::~Drawable()
 {
-    const auto it = std::find(drawableObjects.begin(), drawableObjects.end(), this);
+    UnregisterDrawable(this);
+}
+
+void Drawable::RegisterDrawable(Drawable* drawable)
+{
+    if (drawable && std::find(drawableObjects.begin(), drawableObjects.end(), drawable) == drawableObjects.end())
+    {
+        drawableObjects.push_back(drawable);
+    }
+}
+
+void Drawable::UnregisterDrawable(Drawable* drawable)
+{
+    auto it = std::find(drawableObjects.begin(), drawableObjects.end(), drawable);
     if (it != drawableObjects.end())
     {
         drawableObjects.erase(it);
     }
 }
 
-std::vector<Drawable*> Drawable::GetAllDrawableObjects()
+const std::vector<Drawable*>& Drawable::GetAllDrawableObjects()
 {
-	return drawableObjects;
+    return drawableObjects;
 }

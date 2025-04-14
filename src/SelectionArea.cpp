@@ -56,9 +56,9 @@ void SelectionArea::CheckForSelection(const std::vector<Node*>& nodesToCheck)
     {
         if (!node) continue;
 
-        Vector<int> nodePos = node->GetRect().GetAnchor();
+        const Rect& nodeRect = node->GetRect();
 
-        if (areaRect.Contains(nodePos))
+        if (areaRect.Intersects(nodeRect))
         {
             nodesThisFrame.insert(node);
 

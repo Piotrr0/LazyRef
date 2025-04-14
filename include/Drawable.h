@@ -9,10 +9,13 @@ class Drawable
 {
 public:
 	Drawable();
-	~Drawable();
+	virtual ~Drawable();
 
 	virtual void Draw(SDL_Renderer* renderer) const = 0;
-	static std::vector<Drawable*> GetAllDrawableObjects();
+	static const std::vector<Drawable*>& GetAllDrawableObjects();
+
+	static void RegisterDrawable(Drawable* drawable);
+	static void UnregisterDrawable(Drawable* drawable);
 };
 
 #endif // !DRAWABLE_H

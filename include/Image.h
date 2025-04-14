@@ -21,6 +21,9 @@ protected:
 
 	SDL_Texture* texture;
 
+private:
+	void InitializeFromTexture();
+
 };
 
 #endif // IMAGE_H

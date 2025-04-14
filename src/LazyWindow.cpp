@@ -57,7 +57,34 @@ LazyWindow::LazyWindow(const int width, const int height)
 		{
 			node->SetSelected(false);
 		};
-}  
+}
+
+LazyWindow::~LazyWindow()
+{
+	if (droppedImage)
+	{
+		delete droppedImage;
+		droppedImage = nullptr;
+	}
+
+	if (selectionArea)
+	{
+		delete selectionArea;
+		selectionArea = nullptr;
+	}
+
+	if (renderer)
+	{
+		SDL_DestroyRenderer(renderer);
+		renderer = nullptr;
+	}
+
+	if (window)
+	{
+		SDL_DestroyWindow(window);
+		window = nullptr;
+	}
+}
 
 void LazyWindow::StartRendering()
 {
@@ -81,9 +108,6 @@ void LazyWindow::StartRendering()
 
 		SDL_RenderPresent(renderer);
 	}
-
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
 }
 
 void LazyWindow::HandleEvents(const SDL_Event& event)
