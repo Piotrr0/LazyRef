@@ -7,9 +7,9 @@
 class Rect
 {
 public:
+	Rect() : topLeft(0, 0), bottomRight(0, 0) {}
 	Rect(const Vector<int>& start, const Vector<int>& end);
 	Rect(const Vector<int>& position, int width, int height);
-	Rect() {};
 
 	bool Contains(const Vector<int>& point) const;
 	bool Intersects(const Rect& rect) const;
@@ -22,16 +22,13 @@ public:
 	int GetHeight() const;
 	Vector<int> GetAnchor() const;
 	Vector<int> GetSize() const;
+	Vector<int> GetCenter() const;
 
 	SDL_Rect ConvertSDLRect() const;
 
 protected:
-
-	Vector<int> topRight{};
 	Vector<int> topLeft{};
 	Vector<int> bottomRight{};
-	Vector<int> bottomLeft{};
-
 };
 
 

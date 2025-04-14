@@ -15,11 +15,13 @@ Rect::Rect(const Vector<int>& position, int width, int height)
 	SetRect(position, width, height);
 }
 
+
 bool Rect::Contains(const Vector<int>& point) const
 {
-	return (point.x >= topLeft.x && point.x <= topRight.x &&
-		point.y >= topLeft.y && point.y <= bottomLeft.y);
+	return (point.x >= topLeft.x && point.x <= bottomRight.x &&
+		point.y >= topLeft.y && point.y <= bottomRight.y);
 }
+
 
 bool Rect::Intersects(const Rect& rect) const
 {
@@ -33,56 +35,43 @@ void Rect::Resize(const Vector<int>& delta)
 {
 	const int newWidth = GetWidth() + delta.x;
 	const int newHeight = GetHeight() + delta.y;
-
-	const int newLeft = topLeft.x;
-	const int newTop = topLeft.y;
-	const int newRight = topLeft.x + newWidth;
-	const int newBottom = topLeft.y + newHeight;
-
-	const Vector<int> newTopLeft = { std::min(newLeft, newRight), std::min(newTop, newBottom) };
-	const Vector<int> newBottomRight = { std::max(newLeft, newRight), std::max(newTop, newBottom) };
-
-	const Vector<int> newTopRight = { newBottomRight.x, newTopLeft.y };
-	const Vector<int> newBottomLeft = { newTopLeft.x, newBottomRight.y };
-
-	topLeft = newTopLeft;
-	topRight = newTopRight;
-	bottomLeft = newBottomLeft;
-	bottomRight = newBottomRight;
+	Resize(newWidth, newHeight);
 }
 
-void Rect::Resize(int width, int height)
+void Rect::Resize(int newWidth, int newHeight)
 {
-	const Vector<int> end = { topLeft.x + width, topLeft.y + height };
-	SetRect(topLeft, end);
+	bottomRight.x = topLeft.x + newWidth;
+	bottomRight.y = topLeft.y + newHeight;
+
+	if (newWidth < 0) std::swap(topLeft.x, bottomRight.x);
+	if (newHeight < 0) std::swap(topLeft.y, bottomRight.y);
 }
 
 void Rect::SetRect(const Vector<int>& start, const Vector<int>& end)
 {
 	topLeft.x = std::min(start.x, end.x);
 	topLeft.y = std::min(start.y, end.y);
-
 	bottomRight.x = std::max(start.x, end.x);
 	bottomRight.y = std::max(start.y, end.y);
-
-	topRight = { bottomRight.x, topLeft.y };
-	bottomLeft = { topLeft.x, bottomRight.y };
 }
 
 void Rect::SetRect(const Vector<int>& position, int width, int height)
 {
-	const Vector<int> end = { position.x + width, position.y + height };
-	SetRect(position, end);
+	topLeft = position;
+	bottomRight = { position.x + width, position.y + height };
+
+	if (width < 0) std::swap(topLeft.x, bottomRight.x);
+	if (height < 0) std::swap(topLeft.y, bottomRight.y);
 }
 
 int Rect::GetWidth() const
 {
-	return topRight.x - topLeft.x;
+	return bottomRight.x - topLeft.x;
 }
 
 int Rect::GetHeight() const
 {
-	return bottomLeft.y - topLeft.y;
+	return bottomRight.y - topLeft.y;
 }
 
 Vector<int> Rect::GetAnchor() const
@@ -92,17 +81,23 @@ Vector<int> Rect::GetAnchor() const
 
 Vector<int> Rect::GetSize() const
 {
-	return Vector<int>(GetWidth(), GetHeight());
+	return { GetWidth(), GetHeight() };
+}
+
+Vector<int> Rect::GetCenter() const
+{
+	return {
+		topLeft.x + GetWidth() / 2,
+		topLeft.y + GetHeight() / 2
+	};
 }
 
 SDL_Rect Rect::ConvertSDLRect() const
 {
-	const SDL_Rect sdlRect
-	{
+	return {
 		topLeft.x,
 		topLeft.y,
 		GetWidth(),
 		GetHeight()
 	};
-	return sdlRect;
 }
