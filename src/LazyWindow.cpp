@@ -5,10 +5,11 @@
 #include "Image.h"
 #include "Drawable.h"
 #include <vector>
+#include "NodeController.h"
 
 LazyWindow::LazyWindow(const int width, const int height)
 {
-	if (width <= 0 || height <= 0) 
+	if (width <= 0 || height <= 0)
 	{
 		window = SDL_CreateWindow
 		(
@@ -17,7 +18,7 @@ LazyWindow::LazyWindow(const int width, const int height)
 			SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 		);
 	}
-	else 
+	else
 	{
 		window = SDL_CreateWindow
 		(
@@ -39,7 +40,7 @@ LazyWindow::LazyWindow(const int width, const int height)
 	int currentWidth, currentHeight;
 	SDL_GetWindowSize(window, &currentWidth, &currentHeight);
 
-	if (currentHeight > 0) 
+	if (currentHeight > 0)
 	{
 		const float aspectRatio = (float)currentWidth / currentHeight;
 		const int logicalWidth = static_cast<int>(logicalHeightBase * aspectRatio);
@@ -48,23 +49,25 @@ LazyWindow::LazyWindow(const int width, const int height)
 
 	selectionArea = new SelectionArea(renderer);
 
-	selectionArea->onNodeBeginOverlap = [](Node* node) 
+	selectionArea->onNodeBeginOverlap = [](Node* node)
 		{
 			node->SetSelected(true);
 		};
 
-	selectionArea->onNodeEndOverlap = [](Node* node) 
+	selectionArea->onNodeEndOverlap = [](Node* node)
 		{
 			node->SetSelected(false);
 		};
+
+	nodeController = new NodeController(renderer);
 }
 
 LazyWindow::~LazyWindow()
 {
-	if (droppedImage)
+	if (nodeController)
 	{
-		delete droppedImage;
-		droppedImage = nullptr;
+		delete nodeController;
+		nodeController = nullptr;
 	}
 
 	if (selectionArea)
@@ -101,7 +104,7 @@ void LazyWindow::StartRendering()
 
 		Tick();
 
-		SDL_SetRenderDrawColor(renderer, 27,27,27,255);
+		SDL_SetRenderDrawColor(renderer, 27, 27, 27, 255);
 		SDL_RenderClear(renderer);
 
 		DrawDrawable();
@@ -147,22 +150,30 @@ void LazyWindow::Tick()
 		//TODO:
 	}
 
-	if (droppedImage != nullptr)
+	if (nodeController && selectionArea)
 	{
-		selectionArea->CheckForSelection({droppedImage});
+		std::vector<Node*> nodes = nodeController->GetNodes();
+		selectionArea->CheckForSelection(nodes);
 	}
 }
 
 Node* LazyWindow::IsMouseOverNode() const
 {
-	if (droppedImage != nullptr)
+	if (!nodeController || !nodeController->Empty()) return nullptr;
+
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+
+	float logicalX, logicalY;
+	SDL_RenderWindowToLogical(renderer, x, y, &logicalX, &logicalY);
+
+	Vector<int> logicalMousePos(static_cast<int>(logicalX), static_cast<int>(logicalY));
+
+	if (nodeController)
 	{
-		Vector<float> logicalMousePos = GetGlobalToLogicalPosition();
-		if (droppedImage->GetRect().Contains(Vector<int>(static_cast<int>(logicalMousePos.x), static_cast<int>(logicalMousePos.y))))
-		{
-			return droppedImage;
-		}
+		return nodeController->GetNodeAtPosition(logicalMousePos);
 	}
+
 	return nullptr;
 }
 
@@ -191,12 +202,11 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 {
 	if (isDragging)
 	{
-		graphDrag = Vector(motionEvent.xrel, motionEvent.yrel);
-		graphOffset += graphDrag;
+		graphOffset += Vector(motionEvent.xrel, motionEvent.yrel);;
 
-		if (droppedImage)
+		if (nodeController)
 		{
-			droppedImage->ApplyOffset(graphOffset);
+			nodeController->ApplyOffsetToAllNodes(graphOffset);
 		}
 	}
 
@@ -209,9 +219,10 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 {
 	zoom = LazyMath::Clamp(zoom + wheelEvent.preciseY * zoomStep, minZoom, maxZoom);
-	if (droppedImage != nullptr)
+
+	if (nodeController)
 	{
-		droppedImage->ApplyZoom(zoom);
+		nodeController->ApplyZoomToAllNodes(zoom);
 	}
 }
 
@@ -247,23 +258,7 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 
 void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 {
-	if (dropEvent.file)
-	{
-		if (droppedImage != nullptr)
-		{
-			delete droppedImage;
-			droppedImage = nullptr;
-		}
-
-		const Vector<float> dropLocation = GetGlobalToLogicalPosition();
-		const Vector<int> logicalPosition = Vector<int>(static_cast<int>(dropLocation.x), static_cast<int>(dropLocation.y));
-
-		SDL_Texture* image = Image::LoadTextureFromFile(dropEvent.file, renderer);
-
-		droppedImage = new Image(logicalPosition, graphOffset ,image);
-
-		SDL_free(dropEvent.file);
-	}
+	nodeController->HandleDropEvent(dropEvent, graphOffset, window);
 }
 
 void LazyWindow::DrawDrawable() const
@@ -273,21 +268,4 @@ void LazyWindow::DrawDrawable() const
 	{
 		objectToDraw->Draw(renderer);
 	}
-}
-
-Vector<float> LazyWindow::GetGlobalToLogicalPosition() const
-{
-	int mouseX, mouseY;
-	SDL_GetGlobalMouseState(&mouseX, &mouseY);
-
-	int windowX, windowY;
-	SDL_GetWindowPosition(window, &windowX, &windowY);
-
-	const int relativeX = mouseX - windowX;
-	const int relativeY = mouseY - windowY;
-
-	float logicalX, logicalY;
-	SDL_RenderWindowToLogical(renderer, relativeX, relativeY, &logicalX, &logicalY);
-
-	return Vector<float>(logicalX, logicalY);
 }

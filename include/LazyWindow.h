@@ -7,6 +7,7 @@
 class SelectionArea;
 class Image;
 class Node;
+class NodeController;
 struct SDL_Renderer;
 struct SDL_Window;
 
@@ -20,7 +21,6 @@ public:
 	SDL_Renderer* GetRenderer() const { return renderer; }
 	float GetZoom() const { return zoom; }
 	Vector<int> GetGraphOffset() const { return graphOffset; }
-	Vector<int> GetGraphDrag() const { return graphDrag; }
 
 protected:
 
@@ -41,7 +41,7 @@ protected:
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SelectionArea* selectionArea = nullptr;
-	Image* droppedImage = nullptr;
+	NodeController* nodeController = nullptr;
 
 	int logicalHeightBase = 2000;
 
@@ -51,14 +51,9 @@ protected:
 	float minZoom = 0.5f;
 
 	Vector<int> graphOffset;
-	Vector<int> graphDrag;
 
 	bool running = false;
 	bool isDragging = false;
-
-private:
-
-	Vector<float> GetGlobalToLogicalPosition() const;
 };
 
 #endif // !LAZYWINDOW_H
