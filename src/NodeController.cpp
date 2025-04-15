@@ -32,7 +32,8 @@ Image* NodeController::HandleDropEvent(const SDL_DropEvent& dropEvent, const Vec
         SDL_Texture* imageTexture = Image::LoadTextureFromFile(dropEvent.file, renderer);
         if (imageTexture)
         {
-            Image* image = new Image(dropLocation, graphOffset, imageTexture);
+            Image* image = new Image(dropLocation, Vector<int>(0, 0), imageTexture);
+            image->UpdateGlobalTransform(currentZoom, graphOffset);
             nodes.emplace_back(image);
 
             SDL_free(dropEvent.file);
@@ -58,24 +59,13 @@ Node* NodeController::GetNodeAtPosition(const Vector<int>& position) const
     return nullptr;
 }
 
-void NodeController::ApplyOffsetToAllNodes(const Vector<int>& offset)
+void NodeController::UpdateAllNodesTransform(float zoom, const Vector<int>& offset)
 {
     for (Node* node : nodes)
     {
         if (node)
         {
-            node->ApplyOffset(offset);
-        }
-    }
-}
-
-void NodeController::ApplyZoomToAllNodes(float zoom)
-{
-    for (Node* node : nodes)
-    {
-        if (node)
-        {
-            node->ApplyZoom(zoom);
+            node->UpdateGlobalTransform(zoom, offset);
         }
     }
 }

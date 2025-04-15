@@ -202,11 +202,11 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 {
 	if (isDragging)
 	{
-		graphOffset += Vector(motionEvent.xrel, motionEvent.yrel);;
+		graphOffset += Vector(motionEvent.xrel, motionEvent.yrel);
 
 		if (nodeController)
 		{
-			nodeController->ApplyOffsetToAllNodes(graphOffset);
+			nodeController->UpdateAllNodesTransform(zoom, graphOffset);
 		}
 	}
 
@@ -222,7 +222,7 @@ void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 
 	if (nodeController)
 	{
-		nodeController->ApplyZoomToAllNodes(zoom);
+		nodeController->UpdateAllNodesTransform(zoom, graphOffset);
 	}
 }
 

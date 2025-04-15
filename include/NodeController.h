@@ -18,12 +18,13 @@ public:
 	bool Empty() const { return nodes.empty(); }
 
 	Node* GetNodeAtPosition(const Vector<int>& position) const;
-	void ApplyOffsetToAllNodes(const Vector<int>& offset);
-	void ApplyZoomToAllNodes(float zoom);
+	void UpdateAllNodesTransform(float zoom, const Vector<int>& offset);
 
 protected:
 	SDL_Renderer* renderer;
 	std::vector<Node*> nodes;
+
+	float currentZoom = 1.f;
 };
 
 #endif

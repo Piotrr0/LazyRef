@@ -25,6 +25,8 @@ public:
 	int GetBaseWidth() const { return baseWidth; }
 	int GetBaseHeight() const { return baseHeight; }
 
+	void UpdateGlobalTransform(float globalZoom, const Vector<int>& globalOffset);
+
 protected:
 	int baseWidth = 0;
 	int baseHeight = 0;
