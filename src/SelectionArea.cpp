@@ -37,10 +37,10 @@ void SelectionArea::Draw(SDL_Renderer* renderer) const
 {
 	if (!selectionAreaActive) return;
 
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
-
 	SDL_Rect rectToDraw = areaRect.ConvertSDLRect();
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
 	SDL_RenderFillRect(renderer, &rectToDraw);
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);

@@ -15,6 +15,8 @@ public:
 	Image* HandleDropEvent(const SDL_DropEvent& dropEvent, const Vector<int>& graphOffset, SDL_Window* window);
 
 	std::vector<Node*> GetNodes() const { return nodes; }
+	std::vector<Node*> GetSelectedNodes() const;
+
 	bool Empty() const { return nodes.empty(); }
 
 	Node* GetNodeAtPosition(const Vector<int>& position) const;

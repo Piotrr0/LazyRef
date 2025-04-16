@@ -76,7 +76,7 @@ void Image::InitializeFromTexture()
 
 		baseWidth = w;
 		baseHeight = h;
-		UpdateTransform(Vector<int>(baseWidth, baseHeight), dropPosition);
+		UpdateTransform(Vector<int>(baseWidth, baseHeight), position);
 	}
 }
 

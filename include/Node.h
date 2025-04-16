@@ -13,10 +13,6 @@ public:
 	virtual ~Node() = default;
 
 	Rect GetRect() const { return nodeRect; }
-
-	void ApplyZoom(float zoom);
-	void ApplyOffset(const Vector<int>& offset);
-	void RefreshTransform();
 	void UpdateTransform(const Vector<int>& size, const Vector<int>& position);
 
 	virtual void SetSelected(bool isSelected) { this->isSelected = isSelected; }
@@ -31,7 +27,7 @@ protected:
 	int baseWidth = 0;
 	int baseHeight = 0;
 
-	Vector<int> dropPosition;
+	Vector<int> position;
 	Rect nodeRect;
 
 	Vector<int> nodeOffset;

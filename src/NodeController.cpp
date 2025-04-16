@@ -46,6 +46,19 @@ Image* NodeController::HandleDropEvent(const SDL_DropEvent& dropEvent, const Vec
     return nullptr;
 }
 
+std::vector<Node*> NodeController::GetSelectedNodes() const
+{
+    std::vector<Node*> selectedNodes;
+    for (Node* node : nodes)
+    {
+        if (node->IsSelected())
+        {
+            selectedNodes.emplace_back(node);
+        }
+    }
+    return selectedNodes;
+}
+
 Node* NodeController::GetNodeAtPosition(const Vector<int>& position) const
 {
     for (auto it = nodes.rbegin(); it != nodes.rend(); ++it)

@@ -3,13 +3,13 @@
 #include "components/Rect.h"
 
 Node::Node(const Vector<int>& position) :
-	dropPosition(position)
+	position(position)
 {
 
 }
 
 Node::Node(const Vector<int>& position, const Vector<int>& offset) :
-	dropPosition(position),
+	position(position),
 	nodeOffset(offset)
 {
 
@@ -26,7 +26,7 @@ void Node::UpdateGlobalTransform(float globalZoom, const Vector<int>& globalOffs
 	this->nodeOffset = globalOffset;
 
 	const Vector<int> effectiveSize(baseWidth * globalZoom, baseHeight * globalZoom);
-	const Vector<int> effectivePosition = dropPosition + globalOffset;
+	const Vector<int> effectivePosition = position + globalOffset;
 
 	UpdateTransform(effectiveSize, effectivePosition);
 }
