@@ -14,12 +14,12 @@ public:
 template <typename T>
 T LazyMath::Clamp(const T value, const T min, const T max)
 {
-    if (value > max)
-        return max;
-    if (value < min)
-        return min;
+	if (value > max)
+		return max;
+	if (value < min)
+		return min;
 
-    return value;
+	return value;
 }
 
 #endif // !LAZYMATH_H

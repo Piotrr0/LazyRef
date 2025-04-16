@@ -47,7 +47,7 @@ Vector<T>::Vector() : x(0), y(0)
 }
 
 template<class T>
-Vector<T>::Vector(T x, T y) : x(x), y(y) 
+Vector<T>::Vector(T x, T y) : x(x), y(y)
 {
 
 }

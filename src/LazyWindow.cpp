@@ -194,7 +194,7 @@ void LazyWindow::HandleQuitEvent(const SDL_Event& event)
 }
 
 void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
-{	
+{
 	Vector<int> delta = Vector<int>(motionEvent.xrel, motionEvent.yrel);
 
 	if (selectionArea && selectionArea->selectionAreaActive)
@@ -223,33 +223,33 @@ void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 
 void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent)
 {
-    /*RIGHT MOUSE BUTTON*/
-    if (mouseEvent.button == SDL_BUTTON_RIGHT)
-    {
-        if (nodeController->EmptySelected())
-        {
-            isDragging = true;
-        }
-        else
-        {
-            moveSelected = true;
-        }
-    }
+	/*RIGHT MOUSE BUTTON*/
+	if (mouseEvent.button == SDL_BUTTON_RIGHT)
+	{
+		if (nodeController->EmptySelected())
+		{
+			isDragging = true;
+		}
+		else
+		{
+			moveSelected = true;
+		}
+	}
 
-    /*LEFT MOUSE BUTTON*/
-    if (mouseEvent.button == SDL_BUTTON_LEFT)
-    {
-        if (Node* mouseOverNode = IsMouseOverNode())
-        {
-            mouseOverNode->SetSelected(true);
-        }
-        else
-        {
-            nodeController->UnselectAllNodes();
-        }
+	/*LEFT MOUSE BUTTON*/
+	if (mouseEvent.button == SDL_BUTTON_LEFT)
+	{
+		if (Node* mouseOverNode = IsMouseOverNode())
+		{
+			mouseOverNode->SetSelected(true);
+		}
+		else
+		{
+			nodeController->UnselectAllNodes();
+		}
 
-        selectionArea->StartSelecting(Vector(mouseEvent.x, mouseEvent.y));
-    }
+		selectionArea->StartSelecting(Vector(mouseEvent.x, mouseEvent.y));
+	}
 }
 
 void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent)

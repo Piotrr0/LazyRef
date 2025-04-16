@@ -19,18 +19,18 @@ void SelectionArea::StartSelecting(const Vector<int>& anchor)
 
 void SelectionArea::SetEndPoint(const Vector<int>& endPoint)
 {
-    this->endPoint = endPoint;
-    areaRect.SetRect(anchorPoint, this->endPoint);
+	this->endPoint = endPoint;
+	areaRect.SetRect(anchorPoint, this->endPoint);
 }
 
 void SelectionArea::StopSelecting()
 {
 	selectionAreaActive = false;
 
-	anchorPoint = Vector(0,0);
+	anchorPoint = Vector(0, 0);
 	endPoint = Vector(0, 0);
-    areaRect.SetRect(anchorPoint, endPoint);
-    currentlyOverlappingNodes.clear();
+	areaRect.SetRect(anchorPoint, endPoint);
+	currentlyOverlappingNodes.clear();
 }
 
 void SelectionArea::Draw(SDL_Renderer* renderer) const
@@ -39,8 +39,8 @@ void SelectionArea::Draw(SDL_Renderer* renderer) const
 
 	SDL_Rect rectToDraw = areaRect.ConvertSDLRect();
 
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(renderer, selectionColor.r, selectionColor.g, selectionColor.b, selectionColor.a);
 	SDL_RenderFillRect(renderer, &rectToDraw);
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
@@ -48,40 +48,40 @@ void SelectionArea::Draw(SDL_Renderer* renderer) const
 
 void SelectionArea::CheckForSelection(const std::vector<Node*>& nodesToCheck)
 {
-    if (!selectionAreaActive) return;
+	if (!selectionAreaActive) return;
 
-    std::unordered_set<Node*> nodesThisFrame;
+	std::unordered_set<Node*> nodesThisFrame;
 
-    for (Node* node : nodesToCheck)
-    {
-        if (!node) continue;
+	for (Node* node : nodesToCheck)
+	{
+		if (!node) continue;
 
-        const Rect& nodeRect = node->GetRect();
+		const Rect& nodeRect = node->GetRect();
 
-        if (areaRect.Intersects(nodeRect))
-        {
-            nodesThisFrame.insert(node);
+		if (areaRect.Intersects(nodeRect))
+		{
+			nodesThisFrame.insert(node);
 
-            if (currentlyOverlappingNodes.find(node) == currentlyOverlappingNodes.end())
-            {
-                if (onNodeBeginOverlap)
-                {
-                    onNodeBeginOverlap(node);
-                }
-            }
-        }
-    }
+			if (currentlyOverlappingNodes.find(node) == currentlyOverlappingNodes.end())
+			{
+				if (onNodeBeginOverlap)
+				{
+					onNodeBeginOverlap(node);
+				}
+			}
+		}
+	}
 
-    for (Node* node : currentlyOverlappingNodes)
-    {
-        if (nodesThisFrame.find(node) == nodesThisFrame.end())
-        {
-            if (onNodeEndOverlap)
-            {
-                onNodeEndOverlap(node);
-            }
-        }
-    }
+	for (Node* node : currentlyOverlappingNodes)
+	{
+		if (nodesThisFrame.find(node) == nodesThisFrame.end())
+		{
+			if (onNodeEndOverlap)
+			{
+				onNodeEndOverlap(node);
+			}
+		}
+	}
 
-    currentlyOverlappingNodes = nodesThisFrame;
+	currentlyOverlappingNodes = nodesThisFrame;
 }
