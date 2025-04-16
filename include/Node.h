@@ -13,6 +13,7 @@ public:
 	virtual ~Node() = default;
 
 	Rect GetRect() const { return nodeRect; }
+	void Move(const Vector<int>& delta);
 	void UpdateTransform(const Vector<int>& size, const Vector<int>& position);
 
 	virtual void SetSelected(bool isSelected) { this->isSelected = isSelected; }
@@ -21,7 +22,7 @@ public:
 	int GetBaseWidth() const { return baseWidth; }
 	int GetBaseHeight() const { return baseHeight; }
 
-	void UpdateGlobalTransform(float globalZoom, const Vector<int>& globalOffset);
+	void UpdateGlobalTransform(const Vector<int>& globalOffset);
 
 protected:
 	int baseWidth = 0;
@@ -31,7 +32,6 @@ protected:
 	Rect nodeRect;
 
 	Vector<int> nodeOffset;
-	float zoom = 1.f;
 
 	bool isSelected = false;
 };

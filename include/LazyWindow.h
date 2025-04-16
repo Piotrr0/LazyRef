@@ -19,7 +19,6 @@ public:
 	void StartRendering();
 
 	SDL_Renderer* GetRenderer() const { return renderer; }
-	float GetZoom() const { return zoom; }
 	Vector<int> GetGraphOffset() const { return graphOffset; }
 
 protected:
@@ -45,15 +44,11 @@ protected:
 
 	int logicalHeightBase = 2000;
 
-	float zoom = 1.f;
-	float zoomStep = 0.05f;
-	float maxZoom = 10.f;
-	float minZoom = 0.5f;
-
 	Vector<int> graphOffset;
 
 	bool running = false;
 	bool isDragging = false;
+	bool moveSelected = false;
 };
 
 #endif // !LAZYWINDOW_H

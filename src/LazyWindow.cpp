@@ -194,55 +194,62 @@ void LazyWindow::HandleQuitEvent(const SDL_Event& event)
 }
 
 void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
-{
-	if (isDragging)
-	{
-		graphOffset += Vector(motionEvent.xrel, motionEvent.yrel);
-
-		if (nodeController)
-		{
-			nodeController->UpdateAllNodesTransform(zoom, graphOffset);
-		}
-	}
+{	
+	Vector<int> delta = Vector<int>(motionEvent.xrel, motionEvent.yrel);
 
 	if (selectionArea && selectionArea->selectionAreaActive)
 	{
 		selectionArea->SetEndPoint(Vector(motionEvent.x, motionEvent.y));
 	}
+
+	if (nodeController == nullptr) return;
+
+	if (isDragging)
+	{
+		graphOffset += delta;
+	}
+	else if (moveSelected)
+	{
+		nodeController->MoveSelectedNodes(delta);
+	}
+
+	nodeController->UpdateAllNodesTransform(graphOffset); // TODO: Not optimal
 }
 
 void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 {
-	zoom = LazyMath::Clamp(zoom + wheelEvent.preciseY * zoomStep, minZoom, maxZoom);
-
-	if (nodeController)
-	{
-		nodeController->UpdateAllNodesTransform(zoom, graphOffset);
-	}
+	// TODO: ZOOM
 }
 
 void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent)
 {
-	/*RIGHT MOUSE BUTTON*/
-	if (mouseEvent.button == SDL_BUTTON_RIGHT)
-	{
-		isDragging = true;
-	}
+    /*RIGHT MOUSE BUTTON*/
+    if (mouseEvent.button == SDL_BUTTON_RIGHT)
+    {
+        if (nodeController->EmptySelected())
+        {
+            isDragging = true;
+        }
+        else
+        {
+            moveSelected = true;
+        }
+    }
 
-	/*LEFT MOUSE BUTTON*/
-	if (mouseEvent.button == SDL_BUTTON_LEFT)
-	{
-		if (Node* mouseOverNode = IsMouseOverNode())
-		{
-			mouseOverNode->SetSelected(true);
-		}
-		else
-		{
-			nodeController->UnselectAllNodes();
-		}
+    /*LEFT MOUSE BUTTON*/
+    if (mouseEvent.button == SDL_BUTTON_LEFT)
+    {
+        if (Node* mouseOverNode = IsMouseOverNode())
+        {
+            mouseOverNode->SetSelected(true);
+        }
+        else
+        {
+            nodeController->UnselectAllNodes();
+        }
 
-		selectionArea->StartSelecting(Vector(mouseEvent.x, mouseEvent.y));
-	}
+        selectionArea->StartSelecting(Vector(mouseEvent.x, mouseEvent.y));
+    }
 }
 
 void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent)
@@ -251,6 +258,7 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 	if (mouseEvent.button == SDL_BUTTON_RIGHT)
 	{
 		isDragging = false;
+		moveSelected = false;
 	}
 
 	/*LEFT MOUSE BUTTON*/
@@ -262,7 +270,25 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 
 void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 {
-	nodeController->HandleDropEvent(dropEvent, graphOffset, window);
+	int mouseX, mouseY;
+	SDL_GetGlobalMouseState(&mouseX, &mouseY);
+
+	int windowX, windowY;
+	SDL_GetWindowPosition(window, &windowX, &windowY);
+
+	const int relativeX = mouseX - windowX;
+	const int relativeY = mouseY - windowY;
+
+	float logicalX, logicalY;
+	SDL_RenderWindowToLogical(renderer, relativeX, relativeY, &logicalX, &logicalY);
+
+	const Vector<int> dropLocation
+	(
+		static_cast<int>(logicalX) - graphOffset.x,
+		static_cast<int>(logicalY) - graphOffset.y
+	);
+
+	nodeController->HandleDrop(dropLocation, dropEvent.file);
 }
 
 void LazyWindow::DrawDrawable() const

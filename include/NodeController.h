@@ -12,16 +12,19 @@ class NodeController
 {
 public:
 	NodeController(SDL_Renderer* renderer);
-	Image* HandleDropEvent(const SDL_DropEvent& dropEvent, const Vector<int>& graphOffset, SDL_Window* window);
+	Image* HandleDrop(const Vector<int>& dropLocation, const char* file);
 
 	std::vector<Node*> GetNodes() const { return nodes; }
 	std::vector<Node*> GetSelectedNodes() const;
 
 	bool Empty() const { return nodes.empty(); }
+	bool EmptySelected() const; // TODO: Not optimal can we write more optimized
 
 	Node* GetNodeAtPosition(const Vector<int>& position) const;
-	void UpdateAllNodesTransform(float zoom, const Vector<int>& offset);
+	void UpdateAllNodesTransform(const Vector<int>& offset);
 	void UnselectAllNodes();
+	void MoveSelectedNodes(const Vector<int>& delta);
+
 
 protected:
 	SDL_Renderer* renderer;

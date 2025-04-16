@@ -11,39 +11,16 @@ NodeController::NodeController(SDL_Renderer* renderer)
 
 }
 
-Image* NodeController::HandleDropEvent(const SDL_DropEvent& dropEvent, const Vector<int>& graphOffset, SDL_Window* window)
+Image* NodeController::HandleDrop(const Vector<int>& dropLocation, const char* file)
 {
-    if (dropEvent.file)
+    SDL_Texture* imageTexture = Image::LoadTextureFromFile(file, renderer);
+    if (imageTexture)
     {
-        int mouseX, mouseY;
-        SDL_GetGlobalMouseState(&mouseX, &mouseY);
+        Image* image = new Image(dropLocation, imageTexture);
+        nodes.emplace_back(image);
 
-        int windowX, windowY;
-        SDL_GetWindowPosition(window, &windowX, &windowY);
-
-        const int relativeX = mouseX - windowX;
-        const int relativeY = mouseY - windowY;
-
-        float logicalX, logicalY;
-        SDL_RenderWindowToLogical(renderer, relativeX, relativeY, &logicalX, &logicalY);
-
-        Vector<int> dropLocation(static_cast<int>(logicalX), static_cast<int>(logicalY));
-
-        SDL_Texture* imageTexture = Image::LoadTextureFromFile(dropEvent.file, renderer);
-        if (imageTexture)
-        {
-            Image* image = new Image(dropLocation, Vector<int>(0, 0), imageTexture);
-            image->UpdateGlobalTransform(currentZoom, graphOffset);
-            nodes.emplace_back(image);
-
-            SDL_free(dropEvent.file);
-            return image;
-        }
-
-        SDL_free(dropEvent.file);
+        return image;
     }
-
-    return nullptr;
 }
 
 std::vector<Node*> NodeController::GetSelectedNodes() const
@@ -59,6 +36,18 @@ std::vector<Node*> NodeController::GetSelectedNodes() const
     return selectedNodes;
 }
 
+bool NodeController::EmptySelected() const
+{
+    for (const Node* node : nodes)
+    {
+        if (node->IsSelected())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 Node* NodeController::GetNodeAtPosition(const Vector<int>& position) const
 {
     for (auto it = nodes.rbegin(); it != nodes.rend(); ++it)
@@ -72,13 +61,13 @@ Node* NodeController::GetNodeAtPosition(const Vector<int>& position) const
     return nullptr;
 }
 
-void NodeController::UpdateAllNodesTransform(float zoom, const Vector<int>& offset)
+void NodeController::UpdateAllNodesTransform(const Vector<int>& graphOffset)
 {
     for (Node* node : nodes)
     {
         if (node)
         {
-            node->UpdateGlobalTransform(zoom, offset);
+            node->UpdateGlobalTransform(graphOffset);
         }
     }
 }
@@ -90,6 +79,17 @@ void NodeController::UnselectAllNodes()
         if (node)
         {
             node->SetSelected(false);
+        }
+    }
+}
+
+void NodeController::MoveSelectedNodes(const Vector<int>& delta)
+{
+    for (Node* node : GetSelectedNodes())
+    {
+        if (node)
+        {
+            node->Move(delta);
         }
     }
 }

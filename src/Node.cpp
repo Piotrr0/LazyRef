@@ -15,17 +15,21 @@ Node::Node(const Vector<int>& position, const Vector<int>& offset) :
 
 }
 
+void Node::Move(const Vector<int>& delta)
+{
+	position += delta;
+}
+
 void Node::UpdateTransform(const Vector<int>& size, const Vector<int>& position)
 {
 	nodeRect.SetRect(position, size.x, size.y);
 }
 
-void Node::UpdateGlobalTransform(float globalZoom, const Vector<int>& globalOffset)
+void Node::UpdateGlobalTransform(const Vector<int>& globalOffset)
 {
-	this->zoom = globalZoom;
 	this->nodeOffset = globalOffset;
 
-	const Vector<int> effectiveSize(baseWidth * globalZoom, baseHeight * globalZoom);
+	const Vector<int> effectiveSize(baseWidth, baseHeight);
 	const Vector<int> effectivePosition = position + globalOffset;
 
 	UpdateTransform(effectiveSize, effectivePosition);
