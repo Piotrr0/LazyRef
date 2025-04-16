@@ -145,11 +145,6 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 
 void LazyWindow::Tick()
 {
-	if (Node* mouseOverNode = IsMouseOverNode())
-	{
-		//TODO:
-	}
-
 	if (nodeController && selectionArea)
 	{
 		std::vector<Node*> nodes = nodeController->GetNodes();
@@ -159,7 +154,7 @@ void LazyWindow::Tick()
 
 Node* LazyWindow::IsMouseOverNode() const
 {
-	if (!nodeController || !nodeController->Empty()) return nullptr;
+	if (!nodeController || nodeController->Empty()) return nullptr;
 
 	int x, y;
 	SDL_GetMouseState(&x, &y);
@@ -167,7 +162,7 @@ Node* LazyWindow::IsMouseOverNode() const
 	float logicalX, logicalY;
 	SDL_RenderWindowToLogical(renderer, x, y, &logicalX, &logicalY);
 
-	Vector<int> logicalMousePos(static_cast<int>(logicalX), static_cast<int>(logicalY));
+	const Vector<int> logicalMousePos(static_cast<int>(logicalX), static_cast<int>(logicalY));
 
 	if (nodeController)
 	{
@@ -237,6 +232,15 @@ void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEve
 	/*LEFT MOUSE BUTTON*/
 	if (mouseEvent.button == SDL_BUTTON_LEFT)
 	{
+		if (Node* mouseOverNode = IsMouseOverNode())
+		{
+			mouseOverNode->SetSelected(true);
+		}
+		else
+		{
+			nodeController->UnselectAllNodes();
+		}
+
 		selectionArea->StartSelecting(Vector(mouseEvent.x, mouseEvent.y));
 	}
 }

@@ -19,6 +19,7 @@ public:
 
 	Node* GetNodeAtPosition(const Vector<int>& position) const;
 	void UpdateAllNodesTransform(float zoom, const Vector<int>& offset);
+	void UnselectAllNodes();
 
 protected:
 	SDL_Renderer* renderer;

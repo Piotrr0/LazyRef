@@ -14,7 +14,6 @@ SelectionArea::SelectionArea(SDL_Renderer* renderer) :
 void SelectionArea::StartSelecting(const Vector<int>& anchor)
 {
 	anchorPoint = anchor;
-
 	selectionAreaActive = true;
 }
 
@@ -31,6 +30,7 @@ void SelectionArea::StopSelecting()
 	anchorPoint = Vector(0,0);
 	endPoint = Vector(0, 0);
     areaRect.SetRect(anchorPoint, endPoint);
+    currentlyOverlappingNodes.clear();
 }
 
 void SelectionArea::Draw(SDL_Renderer* renderer) const

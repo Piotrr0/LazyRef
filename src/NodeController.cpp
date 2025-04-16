@@ -69,3 +69,14 @@ void NodeController::UpdateAllNodesTransform(float zoom, const Vector<int>& offs
         }
     }
 }
+
+void NodeController::UnselectAllNodes()
+{
+    for (Node* node : nodes)
+    {
+        if (node)
+        {
+            node->SetSelected(false);
+        }
+    }
+}
