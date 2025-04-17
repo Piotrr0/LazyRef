@@ -21,6 +21,10 @@ public:
 	SDL_Renderer* GetRenderer() const { return renderer; }
 	Vector<int> GetGraphOffset() const { return graphOffset; }
 
+	Vector<int> MouseToCanvas() const;
+	Vector<int> MouseGlobalToCanvas() const;
+	int CalculateLogicalWidth(float width, float height) const;
+
 protected:
 
 	void Tick();

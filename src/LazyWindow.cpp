@@ -40,10 +40,9 @@ LazyWindow::LazyWindow(const int width, const int height)
 	int currentWidth, currentHeight;
 	SDL_GetWindowSize(window, &currentWidth, &currentHeight);
 
-	if (currentHeight > 0)
+	const int logicalWidth = CalculateLogicalWidth(currentWidth, currentHeight);
+	if (renderer != nullptr)
 	{
-		const float aspectRatio = (float)currentWidth / currentHeight;
-		const int logicalWidth = static_cast<int>(logicalHeightBase * aspectRatio);
 		SDL_RenderSetLogicalSize(renderer, logicalWidth, logicalHeightBase);
 	}
 
@@ -143,6 +142,44 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 	}
 }
 
+Vector<int> LazyWindow::MouseToCanvas() const
+{
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+
+	float logicalX, logicalY;
+	SDL_RenderWindowToLogical(renderer, x, y, &logicalX, &logicalY);
+
+	return Vector<int>(static_cast<int>(logicalX), static_cast<int>(logicalY));
+}
+
+Vector<int> LazyWindow::MouseGlobalToCanvas() const
+{
+	int mouseX, mouseY;
+	SDL_GetGlobalMouseState(&mouseX, &mouseY);
+
+	int windowX, windowY;
+	SDL_GetWindowPosition(window, &windowX, &windowY);
+
+	const int relativeX = mouseX - windowX;
+	const int relativeY = mouseY - windowY;
+
+	float logicalX, logicalY;
+	SDL_RenderWindowToLogical(renderer, relativeX, relativeY, &logicalX, &logicalY);
+
+	return Vector<int>(static_cast<int>(logicalX), static_cast<int>(logicalY));
+}
+
+int LazyWindow::CalculateLogicalWidth(float width, float height) const
+{
+	if (height > 0)
+	{
+		const float aspectRatio = (float)width / height;
+		return static_cast<int>(logicalHeightBase * aspectRatio);
+	}
+	return 0;
+}
+
 void LazyWindow::Tick()
 {
 	if (nodeController && selectionArea)
@@ -156,17 +193,9 @@ Node* LazyWindow::IsMouseOverNode() const
 {
 	if (!nodeController || nodeController->Empty()) return nullptr;
 
-	int x, y;
-	SDL_GetMouseState(&x, &y);
-
-	float logicalX, logicalY;
-	SDL_RenderWindowToLogical(renderer, x, y, &logicalX, &logicalY);
-
-	const Vector<int> logicalMousePos(static_cast<int>(logicalX), static_cast<int>(logicalY));
-
 	if (nodeController)
 	{
-		return nodeController->GetNodeAtPosition(logicalMousePos);
+		return nodeController->GetNodeAtPosition(MouseToCanvas());
 	}
 
 	return nullptr;
@@ -179,11 +208,10 @@ void LazyWindow::HandleWindowEvent(const SDL_WindowEvent& windowEvent)
 		const int newWidth = windowEvent.data1;
 		const int newHeight = windowEvent.data2;
 
-		if (newHeight > 0 && renderer)
+		const int logicalWidth = CalculateLogicalWidth(newWidth, newHeight);
+		if (renderer)
 		{
-			const float newAspectRatio = (float)newWidth / newHeight;
-			const int newLogicalWidth = static_cast<int>(logicalHeightBase * newAspectRatio);
-			SDL_RenderSetLogicalSize(renderer, newLogicalWidth, logicalHeightBase);
+			SDL_RenderSetLogicalSize(renderer, logicalWidth, logicalHeightBase);
 		}
 	}
 }
@@ -270,23 +298,8 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 
 void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 {
-	int mouseX, mouseY;
-	SDL_GetGlobalMouseState(&mouseX, &mouseY);
-
-	int windowX, windowY;
-	SDL_GetWindowPosition(window, &windowX, &windowY);
-
-	const int relativeX = mouseX - windowX;
-	const int relativeY = mouseY - windowY;
-
-	float logicalX, logicalY;
-	SDL_RenderWindowToLogical(renderer, relativeX, relativeY, &logicalX, &logicalY);
-
-	const Vector<int> dropLocation
-	(
-		static_cast<int>(logicalX) - graphOffset.x,
-		static_cast<int>(logicalY) - graphOffset.y
-	);
+	const Vector<int> canvasLocation = MouseGlobalToCanvas();
+	const Vector<int> dropLocation = canvasLocation - graphOffset;
 
 	nodeController->HandleDrop(dropLocation, dropEvent.file);
 }
