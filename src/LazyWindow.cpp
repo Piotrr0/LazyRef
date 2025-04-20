@@ -267,15 +267,23 @@ void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEve
 	/*LEFT MOUSE BUTTON*/
 	if (mouseEvent.button == SDL_BUTTON_LEFT)
 	{
-		if (Node* mouseOverNode = IsMouseOverNode())
-		{
-			mouseOverNode->SetSelected(true);
-		}
-		else
+		const bool ctrl = (SDL_GetModState() & KMOD_CTRL) != 0;
+		if (!ctrl)
 		{
 			nodeController->UnselectAllNodes();
 		}
 
+		if (Node* mouseOverNode = IsMouseOverNode())
+		{
+			if (ctrl)
+			{
+				mouseOverNode->SetSelected(!mouseOverNode->IsSelected());
+			}
+			else
+			{
+				mouseOverNode->SetSelected(true);
+			}
+		}
 		selectionArea->StartSelecting(Vector(mouseEvent.x, mouseEvent.y));
 	}
 }
