@@ -24,7 +24,7 @@ public:
 	void UpdateAllNodesTransform(const Vector<int>& offset);
 	void UnselectAllNodes();
 	void MoveSelectedNodes(const Vector<int>& delta);
-
+	void DeleteNode(Node* nodeToDelete);
 
 protected:
 	SDL_Renderer* renderer;

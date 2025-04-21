@@ -122,6 +122,8 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 	case SDL_DROPFILE:
 		HandleDropEvent(event.drop);
 		break;
+	case SDL_KEYDOWN:
+		HandleKeyDown(event.key);
 	case SDL_MOUSEMOTION:
 		HandleMouseMotionEvent(event.motion);
 		break;
@@ -219,6 +221,17 @@ void LazyWindow::HandleWindowEvent(const SDL_WindowEvent& windowEvent)
 void LazyWindow::HandleQuitEvent(const SDL_Event& event)
 {
 	running = false;
+}
+
+void LazyWindow::HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent)
+{
+	if (keyboardEvent.keysym.sym == SDLK_DELETE)
+	{
+		for (Node* node : nodeController->GetSelectedNodes())
+		{
+			nodeController->DeleteNode(node);
+		}
+	}
 }
 
 void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)

@@ -33,6 +33,7 @@ protected:
 	void HandleEvents(const SDL_Event& event);
 	void HandleWindowEvent(const SDL_WindowEvent& windowEvent);
 	void HandleQuitEvent(const SDL_Event& event);
+	void HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent);
 	void HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent);
 	void HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent);
 	void HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent);

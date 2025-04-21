@@ -93,3 +93,17 @@ void NodeController::MoveSelectedNodes(const Vector<int>& delta)
 		}
 	}
 }
+
+void NodeController::DeleteNode(Node* nodeToDelete)
+{
+	if (nodeToDelete)
+	{
+		auto it = std::find(nodes.begin(), nodes.end(), nodeToDelete);
+		if (it != nodes.end())
+		{
+			nodes.erase(it);
+		}
+
+		delete nodeToDelete;
+	}
+}
