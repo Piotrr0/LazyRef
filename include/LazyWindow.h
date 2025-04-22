@@ -51,6 +51,11 @@ protected:
 
 	Vector<int> graphOffset;
 
+	float zoom = 1.0f;
+	float zoomStep = 1.1f;
+	float zoomMin = 0.2f;
+	float zoomMax = 5.0f;
+
 	bool running = false;
 	bool isDragging = false;
 	bool moveSelected = false;

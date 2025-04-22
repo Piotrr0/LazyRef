@@ -103,6 +103,8 @@ void LazyWindow::StartRendering()
 
 		Tick();
 
+		SDL_RenderSetScale(renderer, zoom, zoom);
+
 		SDL_SetRenderDrawColor(renderer, 27, 27, 27, 255);
 		SDL_RenderClear(renderer);
 
@@ -124,6 +126,7 @@ void LazyWindow::HandleEvents(const SDL_Event& event)
 		break;
 	case SDL_KEYDOWN:
 		HandleKeyDown(event.key);
+		break;
 	case SDL_MOUSEMOTION:
 		HandleMouseMotionEvent(event.motion);
 		break;
@@ -259,7 +262,18 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 
 void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 {
-	// TODO: ZOOM
+	int x, y;
+	SDL_GetMouseState(&x, &y);
+
+	const float worldX = (x - graphOffset.x) / zoom;
+	const float worldY = (y - graphOffset.y) / zoom;
+
+	if (wheelEvent.y > 0)
+		zoom *= zoomStep;
+	else if (wheelEvent.y < 0)
+		zoom /= zoomStep;
+
+	zoom = std::max(zoomMin, std::min(zoomMax, zoom));
 }
 
 void LazyWindow::HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent)
