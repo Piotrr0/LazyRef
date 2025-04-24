@@ -83,6 +83,17 @@ void NodeController::UnselectAllNodes()
 	}
 }
 
+void NodeController::SelectAllNodes()
+{
+	for (Node* node : nodes)
+	{
+		if (node)
+		{
+			node->SetSelected(true);
+		}
+	}
+}
+
 void NodeController::MoveSelectedNodes(const Vector<int>& delta)
 {
 	for (Node* node : GetSelectedNodes())

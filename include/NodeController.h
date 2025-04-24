@@ -23,6 +23,7 @@ public:
 	Node* GetNodeAtPosition(const Vector<int>& position) const;
 	void UpdateAllNodesTransform(const Vector<int>& offset);
 	void UnselectAllNodes();
+	void SelectAllNodes();
 	void MoveSelectedNodes(const Vector<int>& delta);
 	void DeleteNode(Node* nodeToDelete);
 

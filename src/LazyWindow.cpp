@@ -228,12 +228,18 @@ void LazyWindow::HandleQuitEvent(const SDL_Event& event)
 
 void LazyWindow::HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent)
 {
+	const bool ctrl = (SDL_GetModState() & KMOD_CTRL) != 0;
+
 	if (keyboardEvent.keysym.sym == SDLK_DELETE)
 	{
 		for (Node* node : nodeController->GetSelectedNodes())
 		{
 			nodeController->DeleteNode(node);
 		}
+	}
+	else if (ctrl && keyboardEvent.keysym.sym == SDLK_a)
+	{
+		nodeController->SelectAllNodes();
 	}
 }
 
