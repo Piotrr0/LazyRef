@@ -1,6 +1,7 @@
 #include "Node.h"
 #include "Vector.h"
 #include "components/Rect.h"
+#include "LazyWindowProperties.h"
 
 Node::Node(const Vector<int>& position) :
 	position(position)
@@ -8,16 +9,10 @@ Node::Node(const Vector<int>& position) :
 
 }
 
-Node::Node(const Vector<int>& position, const Vector<int>& offset) :
-	position(position),
-	nodeOffset(offset)
-{
-
-}
-
 void Node::Move(const Vector<int>& delta)
 {
 	position += delta;
+	UpdateGlobalTransform(LWProperties::graphOffset);
 }
 
 void Node::UpdateTransform(const Vector<int>& size, const Vector<int>& position)

@@ -10,8 +10,6 @@ class Image : public Node
 {
 public:
 	Image(const Vector<int>& position, SDL_Texture* image);
-	Image(const Vector<int>& position, const Vector<int>& offset, SDL_Texture* image);
-
 	virtual ~Image();
 	virtual void Draw(SDL_Renderer* renderer) const override;
 

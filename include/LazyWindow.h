@@ -19,8 +19,6 @@ public:
 	void StartRendering();
 
 	SDL_Renderer* GetRenderer() const { return renderer; }
-	Vector<int> GetGraphOffset() const { return graphOffset; }
-
 	Vector<int> MouseToCanvas() const;
 	Vector<int> MouseGlobalToCanvas() const;
 	int CalculateLogicalWidth(float width, float height) const;
@@ -46,15 +44,6 @@ protected:
 	SDL_Renderer* renderer = nullptr;
 	SelectionArea* selectionArea = nullptr;
 	NodeController* nodeController = nullptr;
-
-	int logicalHeightBase = 2000;
-
-	Vector<int> graphOffset;
-
-	float zoom = 1.0f;
-	float zoomStep = 1.1f;
-	float zoomMin = 0.2f;
-	float zoomMax = 5.0f;
 
 	bool running = false;
 	bool isDragging = false;

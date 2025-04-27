@@ -1,11 +1,13 @@
 #include "LazyWindow.h"
-#include "LazyMath.h"
 #include <SDL2/SDL.h>
 #include "SelectionArea.h"
-#include "Image.h"
 #include "Drawable.h"
 #include <vector>
 #include "NodeController.h"
+#include "Node.h"
+#include "LazyWindowProperties.h"
+
+using namespace LWProperties;
 
 LazyWindow::LazyWindow(const int width, const int height)
 {
@@ -262,8 +264,6 @@ void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
 	{
 		nodeController->MoveSelectedNodes(delta);
 	}
-
-	nodeController->UpdateAllNodesTransform(graphOffset); // TODO: Not optimal
 }
 
 void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)

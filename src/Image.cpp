@@ -10,12 +10,6 @@ Image::Image(const Vector<int>& position, SDL_Texture* image)
 	InitializeFromTexture();
 }
 
-Image::Image(const Vector<int>& position, const Vector<int>& offset, SDL_Texture* image)
-	: Node(position, offset), texture(image)
-{
-	InitializeFromTexture();
-}
-
 Image::~Image()
 {
 	if (texture)

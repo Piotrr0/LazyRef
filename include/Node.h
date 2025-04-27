@@ -9,7 +9,6 @@ class Node : public Drawable
 {
 public:
 	Node(const Vector<int>& position);
-	Node(const Vector<int>& position, const Vector<int>& offset);
 	virtual ~Node() = default;
 
 	Rect GetRect() const { return nodeRect; }
