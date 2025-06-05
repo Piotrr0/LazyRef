@@ -187,11 +187,11 @@ int LazyWindow::CalculateLogicalWidth(float width, float height) const
 	return 0;
 }
 
-void LazyWindow::Tick()
+void LazyWindow::Tick() const
 {
 	if (nodeController && selectionArea)
 	{
-		std::vector<Node*> nodes = nodeController->GetNodes();
+		const std::vector<Node*> nodes = nodeController->GetNodes();
 		selectionArea->CheckForSelection(nodes);
 	}
 }
@@ -204,11 +204,9 @@ Node* LazyWindow::IsMouseOverNode() const
 	{
 		return nodeController->GetNodeAtPosition(MouseToCanvas());
 	}
-
-	return nullptr;
 }
 
-void LazyWindow::HandleWindowEvent(const SDL_WindowEvent& windowEvent)
+void LazyWindow::HandleWindowEvent(const SDL_WindowEvent& windowEvent) const
 {
 	if (windowEvent.event == SDL_WINDOWEVENT_RESIZED || windowEvent.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 	{
@@ -228,7 +226,7 @@ void LazyWindow::HandleQuitEvent(const SDL_Event& event)
 	running = false;
 }
 
-void LazyWindow::HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent)
+void LazyWindow::HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent) const
 {
 	const bool ctrl = (SDL_GetModState() & KMOD_CTRL) != 0;
 
@@ -245,9 +243,9 @@ void LazyWindow::HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent)
 	}
 }
 
-void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent)
+void LazyWindow::HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent) const
 {
-	Vector<int> delta = Vector<int>(motionEvent.xrel, motionEvent.yrel);
+	const Vector<int> delta = Vector<int>(motionEvent.xrel, motionEvent.yrel);
 
 	if (selectionArea && selectionArea->selectionAreaActive)
 	{
@@ -270,9 +268,6 @@ void LazyWindow::HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent)
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
-
-	const float worldX = (x - graphOffset.x) / zoom;
-	const float worldY = (y - graphOffset.y) / zoom;
 
 	if (wheelEvent.y > 0)
 		zoom *= zoomStep;
@@ -337,7 +332,7 @@ void LazyWindow::HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent
 	}
 }
 
-void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
+void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent) const
 {
 	const Vector<int> canvasLocation = MouseGlobalToCanvas();
 	const Vector<int> dropLocation = canvasLocation - graphOffset;
@@ -347,7 +342,7 @@ void LazyWindow::HandleDropEvent(const SDL_DropEvent& dropEvent)
 
 void LazyWindow::DrawDrawable() const
 {
-	const std::vector<Drawable*> objectsToDraw = Drawable::GetAllDrawableObjects();
+	const std::vector<Drawable*>& objectsToDraw = Drawable::GetAllDrawableObjects();
 	for (const Drawable* objectToDraw : objectsToDraw)
 	{
 		objectToDraw->Draw(renderer);

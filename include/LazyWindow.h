@@ -25,18 +25,18 @@ public:
 
 protected:
 
-	void Tick();
+	void Tick() const;
 	Node* IsMouseOverNode() const;
 
 	void HandleEvents(const SDL_Event& event);
-	void HandleWindowEvent(const SDL_WindowEvent& windowEvent);
+	void HandleWindowEvent(const SDL_WindowEvent& windowEvent) const;
 	void HandleQuitEvent(const SDL_Event& event);
-	void HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent);
-	void HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent);
+	void HandleKeyDown(const SDL_KeyboardEvent& keyboardEvent) const;
+	void HandleMouseMotionEvent(const SDL_MouseMotionEvent& motionEvent) const;
 	void HandleMouseWheelEvent(const SDL_MouseWheelEvent& wheelEvent);
 	void HandleMouseButtonDownEvent(const SDL_MouseButtonEvent& mouseEvent);
 	void HandleMouseButtonUpEvent(const SDL_MouseButtonEvent& mouseEvent);
-	void HandleDropEvent(const SDL_DropEvent& dropEvent);
+	void HandleDropEvent(const SDL_DropEvent& dropEvent) const;
 
 	void DrawDrawable() const;
 

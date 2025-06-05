@@ -4,6 +4,7 @@
 #include "Node.h"
 #include <SDL2/SDL.h>
 #include <vector>
+#include <algorithm>
 
 NodeController::NodeController(SDL_Renderer* renderer)
 	: renderer(renderer)
@@ -13,14 +14,14 @@ NodeController::NodeController(SDL_Renderer* renderer)
 
 Image* NodeController::HandleDrop(const Vector<int>& dropLocation, const char* file)
 {
-	SDL_Texture* imageTexture = Image::LoadTextureFromFile(file, renderer);
-	if (imageTexture)
+	if (SDL_Texture* imageTexture = Image::LoadTextureFromFile(file, renderer))
 	{
 		Image* image = new Image(dropLocation, imageTexture);
 		nodes.emplace_back(image);
 
 		return image;
 	}
+	return nullptr;
 }
 
 std::vector<Node*> NodeController::GetSelectedNodes() const

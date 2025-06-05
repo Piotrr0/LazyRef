@@ -15,7 +15,7 @@ public:
 	static const std::vector<Drawable*>& GetAllDrawableObjects();
 
 	static void RegisterDrawable(Drawable* drawable);
-	static void UnregisterDrawable(Drawable* drawable);
+	static void UnregisterDrawable(const Drawable* drawable);
 };
 
 #endif // !DRAWABLE_H

@@ -1,4 +1,5 @@
 #include "Drawable.h"
+#include  <algorithm>
 
 namespace
 {
@@ -23,10 +24,9 @@ void Drawable::RegisterDrawable(Drawable* drawable)
 	}
 }
 
-void Drawable::UnregisterDrawable(Drawable* drawable)
+void Drawable::UnregisterDrawable(const Drawable* drawable)
 {
-	auto it = std::find(drawableObjects.begin(), drawableObjects.end(), drawable);
-	if (it != drawableObjects.end())
+	if (const auto it = std::find(drawableObjects.begin(), drawableObjects.end(), drawable); it != drawableObjects.end())
 	{
 		drawableObjects.erase(it);
 	}
